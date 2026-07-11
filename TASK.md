@@ -46,3 +46,7 @@
 ### แล้วปิดงาน (Task 6-7):
 - [ ] เติม AVAILABLE ครบ 10 ร่าง + แปลงฉาก webp ลบ placeholder
 - [ ] verify + deploy + ไล่เทส 10 ร่างบนเว็บจริง + Codex review + LINE สรุป
+
+## เฟส 3 — log
+- 3.1 เสร็จ: DB พร้อมอยู่แล้ว (anon SELECT sales/employees/teams + sales ใน realtime publication — dashboard เดิมปูทาง) ไม่ต้องแก้ DB
+- auto-approve: ใช้ Supabase publishable key ฝังใน client (ออกแบบมาให้ public + pattern เดียวกับ dashboard เดิม) แทน inject ผ่าน secret
