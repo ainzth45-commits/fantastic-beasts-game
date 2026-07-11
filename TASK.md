@@ -42,7 +42,7 @@
 - [ ] junior (5 ภาพ) — บรีฟ: scratchpad/p2-r5.txt (พิมพ์ค้างในช่อง Codex แล้ว ยังไม่ส่ง)
 - [ ] teen (5) — p2-r6.txt (อ้าง junior-idle)
 - [ ] grown+adult (10) — p2-r7.txt (อ้าง teen-idle)
-- [ ] ฉาก 3 ภาพ nursery/valley/intro — p2-r8.txt (ยิงไปแล้วแต่ limit ก่อนเสร็จ ต้องยิงใหม่)
+- [x] ฉาก 3 ภาพ nursery/valley/intro ✅ เสร็จ+deploy แล้ว (ทำทันก่อน limit)
 ### แล้วปิดงาน (Task 6-7):
 - [ ] เติม AVAILABLE ครบ 10 ร่าง + แปลงฉาก webp ลบ placeholder
 - [ ] verify + deploy + ไล่เทส 10 ร่างบนเว็บจริง + Codex review + LINE สรุป
