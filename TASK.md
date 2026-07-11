@@ -58,3 +58,11 @@
 ### งานต่อจากนี้ (session หน้า)
 1. ⏸WAIT[Codex limit] ปิดเฟส 2: junior→teen→grown/adult (บรีฟ docs/art-briefs/phase2-remaining-unisheep.md)
 2. เฟส 4A วงจรรอบเกม (โค้ดล้วน ทำได้เลย) → ตาม master roadmap
+
+## เพิ่มเติมท้ายวัน (2026-07-11 ค่ำ) ✅
+- [x] ปุ่ม logo: กดมุมซ้ายบน → หน้าแรก (logo ใหญ่ค้าง + พักเลี้ยงอัตโนมัติ) · กด logo ใหญ่ → กลับเกม + เริ่มเลี้ยงอัตโนมัติ — เทสจริงผ่าน deploy แล้ว
+- [x] พรีวิวโปรโมท: เกมที่2/พรีวิว-หน้าแรก.jpg (logo+ฉาก composite 1920x1080)
+
+## สถานะปิดวัน 2026-07-11
+เฟส 1 ✅ · เฟส 2 = 80% (⏸รอ Codex limit — เหลือ junior/teen/grown/adult) · เฟส 3 ✅ (ยอดจริง end-to-end) · เฟส 4A พร้อมเริ่ม (โค้ดล้วน)
+เปิด session ใหม่: อ่าน master-roadmap.md + TASK.md นี้ · Codex หายลิมิต → ยิงบรีฟจาก docs/art-briefs/phase2-remaining-unisheep.md ตามลำดับ
