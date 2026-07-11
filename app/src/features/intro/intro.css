@@ -118,3 +118,31 @@
   0%, 100% { opacity: 0; scale: 0.6; }
   50% { opacity: 1; scale: 1.15; }
 }
+
+/* โหมด manual (หน้าแรกจากปุ่ม logo) — คลิก logo ได้ + hint */
+.intro--manual {
+  pointer-events: auto;
+}
+.intro--manual .intro__logo {
+  cursor: pointer;
+}
+.intro--manual .intro__logo:hover {
+  scale: 1.03;
+  transition: scale 0.25s ease;
+}
+.intro__hint {
+  position: fixed;
+  left: 50%;
+  bottom: 12%;
+  translate: -50% 0;
+  font-size: clamp(16px, 2.8dvh, 26px);
+  font-weight: 600;
+  color: rgba(244, 241, 255, 0.92);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  animation: hint-pulse 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.55; translate: -50% 0; }
+  50% { opacity: 1; translate: -50% -6px; }
+}

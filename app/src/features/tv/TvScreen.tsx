@@ -37,7 +37,7 @@ function baht(n: number): string {
   return n.toLocaleString("th-TH", { maximumFractionDigits: 0 });
 }
 
-export function TvScreen() {
+export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
   const { state, mood, feed, feeding, startFeeding, pauseFeeding, todayTotal, feedStatus } = useGameStore();
   const stage = currentStage(state);
   const hatched = isHatched(state);
@@ -72,7 +72,10 @@ export function TvScreen() {
       {/* ฉากเปลี่ยนตามขั้นการเติบโต (Codex) + crossfade */}
       <StageBackground stage={stage} />
       <header className="tv__top">
-        <Logo compact />
+        {/* กด logo = กลับหน้าแรก (พักเลี้ยงอัตโนมัติ) */}
+        <button type="button" className="tv__logo-btn" onClick={onLogoClick} title="กลับหน้าแรก (พักเลี้ยง)">
+          <Logo compact />
+        </button>
         <div className="tv__name">
           <span className="tv__name-text">{hatched ? `น้อง${displayName}` : "🥚 รอฟักไข่…"}</span>
           {hatched && (
