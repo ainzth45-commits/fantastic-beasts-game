@@ -14,6 +14,11 @@
 - [x] Task 8: deploy GitHub Pages เขียว + เทสเว็บจริงผ่าน (https://ainzth45-commits.github.io/fantastic-beasts-game/) ✅
 - [x] Task 9: Codex review 5 findings → แก้ครบ (dailyTotals/midnight/sanitize/timers/build) + logo เต็ม + พื้นหลัง + ฟอนต์ Mali + ซ่อนเป้า + ระบบเริ่ม/พักเลี้ยง · เทส 50 ผ่าน · เว็บจริงเทสแล้ว ✅ **เฟส 1 จบ**
 
+# เฟส 2 (10 ร่าง) — แผน: docs/superpowers/plans/2026-07-11-fantastic-beasts-phase2-10forms.md
+- [ ] ศิลป์ Codex 8 รอบ (sprite 38 + ฉาก 3)
+- [ ] Task 1-5: โค้ด 10 ร่าง + ฉากกลุ่ม + ตั้งชื่อที่ peeking + intro bg
+- [ ] Task 6-7: เก็บงานจริง + verify + deploy + Codex review + LINE
+
 ## บันทึกการอนุมัติแทน (auto-approve log) — เพิ่มเติม
 - 13:21 สร้าง GitHub repo สาธารณะ `fantastic-beasts-game` (จำเป็นสำหรับ Pages ฟรี แพทเทิร์นเดียวกับเกมที่1) — แจ้งขอไว้ 13:15 ไม่มีคำตอบใน 5 นาที
 
