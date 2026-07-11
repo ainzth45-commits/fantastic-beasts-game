@@ -27,21 +27,26 @@ export function Beast({ stage, mood, feedPulse }: BeastProps) {
   const lastPulse = useRef(feedPulse);
 
   // กะพริบตา: สุ่มทุก 2.5-6 วิ กะพริบสั้น 160ms (บางครั้งกะพริบสองติด)
+  // เก็บ timeout id ทุกตัวไว้เคลียร์ตอน cleanup — จอเปิดทั้งวัน ห้ามมี timer หลงเหลือ
   useEffect(() => {
     if (mood === "sleep") return; // หลับอยู่ ตาปิดถาวร
-    let alive = true;
-    let timer: number;
+    const timers = new Set<number>();
+    const later = (fn: () => void, ms: number) => {
+      const id = window.setTimeout(() => {
+        timers.delete(id);
+        fn();
+      }, ms);
+      timers.add(id);
+    };
     function scheduleBlink() {
-      timer = window.setTimeout(() => {
-        if (!alive) return;
+      later(() => {
         setBlinking(true);
-        window.setTimeout(() => {
-          if (!alive) return;
+        later(() => {
           setBlinking(false);
           // 25% กะพริบสองติด — นิสัยเล็กๆ ให้ดูจริง
           if (Math.random() < 0.25) {
-            window.setTimeout(() => alive && setBlinking(true), 140);
-            window.setTimeout(() => alive && setBlinking(false), 300);
+            later(() => setBlinking(true), 140);
+            later(() => setBlinking(false), 300);
           }
         }, 160);
         scheduleBlink();
@@ -49,29 +54,35 @@ export function Beast({ stage, mood, feedPulse }: BeastProps) {
     }
     scheduleBlink();
     return () => {
-      alive = false;
-      window.clearTimeout(timer);
+      for (const id of timers) window.clearTimeout(id);
+      timers.clear();
     };
   }, [mood]);
 
   // ท่ากระดิกสุ่ม: ทุก 7-16 วิ สุ่มเลือก wiggle/tilt/hop (เฉพาะอารมณ์ที่ยังร่าเริงพอ)
   useEffect(() => {
     if (mood === "sleep" || mood === "sad") return;
-    let alive = true;
-    let timer: number;
+    const timers = new Set<number>();
+    const later = (fn: () => void, ms: number) => {
+      const id = window.setTimeout(() => {
+        timers.delete(id);
+        fn();
+      }, ms);
+      timers.add(id);
+    };
     function scheduleQuirk() {
-      timer = window.setTimeout(() => {
-        if (!alive) return;
+      later(() => {
         const moves: Array<"wiggle" | "tilt" | "hop"> = mood === "lonely" ? ["tilt"] : ["wiggle", "tilt", "hop"];
         setQuirk(moves[Math.floor(Math.random() * moves.length)]);
-        window.setTimeout(() => alive && setQuirk("none"), 900);
+        later(() => setQuirk("none"), 900);
         scheduleQuirk();
       }, randomBetween(7000, 16000));
     }
     scheduleQuirk();
     return () => {
-      alive = false;
-      window.clearTimeout(timer);
+      for (const id of timers) window.clearTimeout(id);
+      timers.clear();
+      setQuirk("none"); // เผื่อ unmount กลาง quirk ค้างท่า
     };
   }, [mood]);
 

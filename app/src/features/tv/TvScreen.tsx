@@ -1,6 +1,6 @@
 // จอ TV หลัก — สัตว์กลางจอ + หลอดโต + ticker + ป้ายยอดเข้า + ตั้งชื่อตอนฟัก
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { SaleEvent } from "../../domain/types";
 import { currentStage, isHatched } from "../../state/gameState";
 import { useGameStore } from "../../state/useGameStore";
@@ -32,7 +32,7 @@ function baht(n: number): string {
 }
 
 export function TvScreen() {
-  const { state, mood, feed, feeding, startFeeding, pauseFeeding } = useGameStore();
+  const { state, mood, feed, feeding, startFeeding, pauseFeeding, todayTotal } = useGameStore();
   const stage = currentStage(state);
   const hatched = isHatched(state);
 
@@ -58,14 +58,13 @@ export function TvScreen() {
 
   const displayName = state.beastName ?? "???";
   const moodInfo = MOOD_LABEL[mood];
-  const todayTotal = useMemo(() => {
-    const today = new Date().toDateString();
-    return state.events.filter((e) => new Date(e.at).toDateString() === today).reduce((s, e) => s + e.amount, 0);
-  }, [state.events]);
+  // todayTotal มาจาก store (aggregate + ผูกนาฬิกา — ข้ามเที่ยงคืนรีเซ็ตเอง)
   const recent = state.events.slice(-5).reverse();
 
   return (
     <div className="tv">
+      {/* ฉากทุ่งหญ้าเวทมนตร์ (Codex) — ใช้ <img> เพื่อให้ base path ถูกทั้ง dev/Pages */}
+      <img className="tv__bg" src={`${import.meta.env.BASE_URL}assets/bg-meadow.webp`} alt="" aria-hidden />
       <header className="tv__top">
         <Logo compact />
         <div className="tv__name">

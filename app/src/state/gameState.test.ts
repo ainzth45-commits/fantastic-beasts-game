@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 import type { SaleEvent } from "../domain/types";
-import { MAX_EVENTS, currentStage, feedSale, initialState, isHatched, resetGame, setBeastName } from "./gameState";
+import {
+  MAX_EVENTS,
+  currentStage,
+  dateKey,
+  feedSale,
+  initialState,
+  isHatched,
+  resetGame,
+  sanitizeGameState,
+  setBeastName,
+  todayTotal,
+} from "./gameState";
 
 function sale(amount: number, at = 1_000_000): SaleEvent {
   return { id: `s${Math.abs(amount)}-${at}`, amount, at };
@@ -58,6 +69,27 @@ describe("gameState actions", () => {
     expect(s.points).toBe(1500);
   });
 
+  it("dailyTotals สะสมยอดต่อวัน — ไม่โดน MAX_EVENTS cap (Codex finding #3)", () => {
+    let s = initialState();
+    const day = new Date(2026, 6, 14, 10).getTime();
+    for (let i = 0; i < MAX_EVENTS + 100; i += 1) {
+      s = feedSale(s, { id: `e${i}`, amount: 100, at: day + i }, "calm");
+    }
+    // event log โดน cap แต่ยอดวันครบทุกบาท
+    expect(s.events).toHaveLength(MAX_EVENTS);
+    expect(todayTotal(s, day)).toBe((MAX_EVENTS + 100) * 100);
+  });
+
+  it("todayTotal คนละวัน = 0 (ข้ามเที่ยงคืนรีเซ็ตเอง — Codex finding #2)", () => {
+    let s = initialState();
+    const monday = new Date(2026, 6, 13, 15).getTime();
+    s = feedSale(s, { id: "m1", amount: 5000, at: monday }, "calm");
+    const tuesday = new Date(2026, 6, 14, 9).getTime();
+    expect(todayTotal(s, monday)).toBe(5000);
+    expect(todayTotal(s, tuesday)).toBe(0);
+    expect(dateKey(monday)).not.toBe(dateKey(tuesday));
+  });
+
   it("resetGame ล้างกลับไข่ tier เดิม", () => {
     let s = initialState("medium");
     s = feedSale(s, sale(500_000), "calm");
@@ -66,5 +98,43 @@ describe("gameState actions", () => {
     expect(r.points).toBe(0);
     expect(r.tier).toBe("medium");
     expect(r.beastName).toBeNull();
+  });
+});
+
+describe("sanitizeGameState — ซ่อม localStorage เพี้ยน (Codex finding #5)", () => {
+  it("ข้อมูลขยะ/null/string → state เริ่มต้น ไม่พัง", () => {
+    expect(sanitizeGameState(null)).toEqual(initialState());
+    expect(sanitizeGameState("garbage")).toEqual(initialState());
+    expect(sanitizeGameState(42)).toEqual(initialState());
+  });
+
+  it("events ไม่ใช่ array / มี item เพี้ยน → กรองทิ้ง", () => {
+    const s = sanitizeGameState({ tier: "easy", points: 100, events: "oops" });
+    expect(s.events).toEqual([]);
+    const s2 = sanitizeGameState({
+      events: [{ id: "ok", amount: 500, at: 123 }, { id: 1, amount: "x" }, null],
+    });
+    expect(s2.events).toHaveLength(1);
+    expect(s2.events[0].id).toBe("ok");
+  });
+
+  it("ค่าตัวเลขเพี้ยน (ติดลบ/NaN/goal 0) → default", () => {
+    const s = sanitizeGameState({ points: -50, goalPoints: 0, tier: "hard" });
+    expect(s.points).toBe(0);
+    expect(s.goalPoints).toBeGreaterThan(0);
+    expect(s.tier).toBe("hard");
+  });
+
+  it("state ดีอยู่แล้ว → คงค่าเดิม (รวม dailyTotals)", () => {
+    let s = initialState("medium");
+    s = feedSale(s, { id: "a", amount: 999, at: Date.now() }, "calm");
+    s = setBeastName(s, "น้องฟู");
+    const restored = sanitizeGameState(JSON.parse(JSON.stringify(s)));
+    expect(restored).toEqual(s);
+  });
+
+  it("dailyTotals ค่าเพี้ยน (ติดลบ/ไม่ใช่ number) → ตัดทิ้ง", () => {
+    const s = sanitizeGameState({ dailyTotals: { "2026-07-11": 500, "2026-07-10": -9, "2026-07-09": "x" } });
+    expect(s.dailyTotals).toEqual({ "2026-07-11": 500 });
   });
 });

@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { DEFAULT_MOOD_CONFIG, moodFor, type MoodConfig } from "../domain/mood";
 import type { Mood, SaleEvent } from "../domain/types";
-import { feedSale, initialState, resetGame, setBeastName, type GameState } from "./gameState";
+import { feedSale, resetGame, sanitizeGameState, setBeastName, todayTotal as todayTotalOf, type GameState } from "./gameState";
 import { loadJson, saveJson } from "./persist";
 
 const STORAGE_KEY = "fantastic-beasts/game-v1";
@@ -23,12 +23,17 @@ interface StoreValue {
   /** POC: บังคับอารมณ์จาก DevPanel (null = คำนวณจริง) */
   forcedMood: Mood | null;
   setForcedMood: (m: Mood | null) => void;
+  /** ยอดวันนี้ (aggregate — อัปเดตตามนาฬิกา ข้ามเที่ยงคืนรีเซ็ตเอง) */
+  todayTotal: number;
+  /** นาฬิกากลาง (ms) — เดินทุก 30 วิ ให้ UI ที่อิงเวลา re-render */
+  nowMs: number;
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
 
 function loadInitial(): GameState {
-  return loadJson<GameState>(STORAGE_KEY, initialState());
+  // sanitize เสมอ — storage เก่า/เพี้ยนต้องไม่ทำจอพัง (schema เปลี่ยนข้ามเวอร์ชันด้วย)
+  return sanitizeGameState(loadJson<unknown>(STORAGE_KEY, null));
 }
 
 export function GameStoreProvider({ children }: { children: ReactNode }) {
@@ -49,10 +54,16 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
     saveJson(STORAGE_KEY, state);
   }, [state]);
 
+  // ยอดวันนี้จาก aggregate — ผูกกับ nowTick ให้ข้ามเที่ยงคืนแล้วรีเซ็ตเอง (จอเปิดค้างคืน)
+  const todayTotal = useMemo(() => todayTotalOf(state, nowTick), [state, nowTick]);
+
   // พักเลี้ยง = น้องหลับ · เปิดเลี้ยง = ตื่นเสมอ (วันหยุดคนมาทำงานก็เลี้ยงได้)
   const computedMood = useMemo(
-    () => (feeding ? moodFor(state.events, new Date(nowTick), moodConfig, { ignoreSleep: true }) : "sleep"),
-    [feeding, state.events, nowTick, moodConfig],
+    () =>
+      feeding
+        ? moodFor(state.events, new Date(nowTick), moodConfig, { ignoreSleep: true, todayTotal })
+        : "sleep",
+    [feeding, state.events, nowTick, moodConfig, todayTotal],
   );
   const mood = forcedMood ?? computedMood;
 
@@ -61,7 +72,11 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
       if (!feeding) return; // ไม่ได้เปิดเลี้ยง = ไม่นับยอด (กติกาเจ้านาย)
       setState((current) => {
         const moodAtSale =
-          forcedMood ?? moodFor(current.events, new Date(), moodConfig, { ignoreSleep: true });
+          forcedMood ??
+          moodFor(current.events, new Date(), moodConfig, {
+            ignoreSleep: true,
+            todayTotal: todayTotalOf(current, Date.now()),
+          });
         return feedSale(current, sale, moodAtSale);
       });
       setNowTick(Date.now());
@@ -76,8 +91,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   const reset = useCallback(() => setState((c) => resetGame(c)), []);
 
   const value = useMemo(
-    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood }),
-    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood],
+    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick }),
+    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, todayTotal, nowTick],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

@@ -67,6 +67,11 @@ function sameDay(ms: number, now: Date): boolean {
 export interface MoodOptions {
   /** เปิดเลี้ยงอยู่ = น้องตื่นเสมอ (วันหยุดมีคนมาทำงานกด "เลี้ยงต่อ" ก็เลี้ยงได้) */
   ignoreSleep?: boolean;
+  /**
+   * ยอดรวมวันนี้จาก aggregate (dailyTotals) — ถ้าไม่ส่งมา จะคำนวณจาก events
+   * ซึ่งอาจ undercount เพราะ events ถูก cap ที่ MAX_EVENTS
+   */
+  todayTotal?: number;
 }
 
 export function moodFor(events: SaleEvent[], now: Date, cfg: MoodConfig, opts: MoodOptions = {}): Mood {
@@ -85,9 +90,10 @@ export function moodFor(events: SaleEvent[], now: Date, cfg: MoodConfig, opts: M
   const happySince = nowMs - cfg.happyWindowMinutes * minuteMs;
   if (valid.filter((e) => e.at > happySince).length >= cfg.happyCount) return "happy";
 
-  // 4) sad — หลังเวลาเช็ก ยอดวันนี้ต่ำกว่าเกณฑ์
+  // 4) sad — หลังเวลาเช็ก ยอดวันนี้ต่ำกว่าเกณฑ์ (ใช้ aggregate ถ้ามี — event log ถูก cap)
   if (now.getHours() >= cfg.sadCheckHour) {
-    const todayTotal = valid.filter((e) => sameDay(e.at, now)).reduce((sum, e) => sum + e.amount, 0);
+    const todayTotal =
+      opts.todayTotal ?? valid.filter((e) => sameDay(e.at, now)).reduce((sum, e) => sum + e.amount, 0);
     if (todayTotal < cfg.dailyAverageAmount * cfg.sadBelowRatio) return "sad";
   }
 
