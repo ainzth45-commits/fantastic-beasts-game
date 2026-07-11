@@ -1,0 +1,249 @@
+/* จอ TV — landscape เต็มจอ อ่านชัดจากระยะไกล */
+
+.tv {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(10px, 2dvh, 24px) clamp(16px, 3vw, 40px);
+  gap: clamp(6px, 1.2dvh, 16px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ดาวพื้นหลังเวทมนตร์ */
+.tv::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(2px 2px at 12% 22%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 78% 14%, rgba(255, 255, 255, 0.4), transparent 60%),
+    radial-gradient(2px 2px at 62% 34%, rgba(205, 185, 255, 0.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 30% 60%, rgba(255, 255, 255, 0.3), transparent 60%),
+    radial-gradient(2px 2px at 90% 55%, rgba(255, 217, 122, 0.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 8% 78%, rgba(205, 185, 255, 0.3), transparent 60%);
+  animation: stars-drift 60s linear infinite;
+}
+@keyframes stars-drift {
+  from { background-position: 0 0; }
+  to { background-position: -200px 60px; }
+}
+
+/* ===== แถวบน: logo · ชื่อ · อารมณ์ ===== */
+.tv__top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  z-index: 1;
+}
+.tv__top > :first-child { justify-self: start; }
+
+.tv__name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-self: center;
+}
+.tv__name-text {
+  font-size: clamp(26px, 4.6dvh, 48px);
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(168, 130, 255, 0.8);
+}
+.tv__rename {
+  background: none;
+  border: none;
+  font-size: clamp(16px, 2.4dvh, 24px);
+  cursor: pointer;
+  opacity: 0.55;
+}
+.tv__rename:hover { opacity: 1; }
+
+.tv__mood {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: clamp(16px, 2.6dvh, 26px);
+  font-weight: 600;
+  transition: border-color 0.8s ease, background 0.8s ease;
+}
+.tv__mood-emoji { font-size: 1.35em; }
+.tv__mood--thrilled { border-color: #ffd97a; background: rgba(255, 194, 77, 0.18); }
+.tv__mood--happy { border-color: #9df0b1; background: rgba(120, 230, 150, 0.14); }
+.tv__mood--lonely { border-color: #b8c4ff; background: rgba(140, 160, 255, 0.14); }
+.tv__mood--sad { border-color: #8fa8ff; background: rgba(90, 120, 220, 0.16); }
+.tv__mood--sleep { border-color: rgba(160, 160, 220, 0.4); opacity: 0.8; }
+
+/* ===== กลางจอ: สัตว์ + ป้ายยอดเข้า ===== */
+.tv__stage-area {
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+
+.tv__toast {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, rgba(255, 217, 122, 0.95), rgba(255, 170, 90, 0.95));
+  color: #4a2800;
+  font-weight: 900;
+  font-size: clamp(18px, 3.2dvh, 34px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: toast-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2), toast-out 0.6s ease 5.4s forwards;
+  white-space: nowrap;
+}
+.tv__toast-emoji { font-size: 1.3em; }
+@keyframes toast-in {
+  from { translate: -50% -30px; opacity: 0; scale: 0.8; }
+  to { translate: -50% 0; opacity: 1; scale: 1; }
+}
+@keyframes toast-out {
+  to { translate: -50% -20px; opacity: 0; }
+}
+
+/* ===== ล่าง: หลอดโต + ticker ===== */
+.tv__bottom { display: grid; gap: clamp(6px, 1dvh, 12px); z-index: 1; }
+
+.tv__progress { display: grid; gap: 6px; }
+.tv__progress-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.tv__stage-label {
+  font-size: clamp(18px, 3dvh, 30px);
+  font-weight: 900;
+  color: #ffd97a;
+}
+.tv__points {
+  font-size: clamp(15px, 2.4dvh, 24px);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+.tv__next {
+  margin-left: auto;
+  font-size: clamp(14px, 2.2dvh, 22px);
+  color: #cdb9ff;
+}
+
+.tv__bar {
+  position: relative;
+  height: clamp(18px, 3.2dvh, 32px);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+.tv__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7ee0a3, #ffd97a 60%, #ffb35c);
+  box-shadow: 0 0 18px rgba(255, 217, 122, 0.55);
+  transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* ขีดเกณฑ์ขั้นโต 10/30/60% */
+.tv__bar-marks span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.tv__ticker {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: clamp(13px, 2dvh, 20px);
+}
+.tv__today {
+  font-weight: 800;
+  color: #9df0b1;
+  flex-shrink: 0;
+}
+.tv__tick {
+  opacity: 0.75;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ===== naming overlay ===== */
+.naming {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 6, 30, 0.75);
+  backdrop-filter: blur(6px);
+}
+.naming__card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(560px, 92vw);
+  padding: clamp(24px, 5dvh, 48px);
+  border-radius: 24px;
+  border: 2px solid rgba(255, 217, 122, 0.5);
+  background: linear-gradient(160deg, #1c1650, #2a1a5e);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+.naming__egg { font-size: clamp(48px, 9dvh, 84px); animation: egg-wobble 1.6s ease-in-out infinite; }
+@keyframes egg-wobble {
+  0%, 100% { rotate: -6deg; }
+  50% { rotate: 6deg; }
+}
+.naming__title { font-size: clamp(24px, 4.4dvh, 40px); font-weight: 900; color: #ffd97a; }
+.naming__lead { opacity: 0.85; font-size: clamp(14px, 2.4dvh, 20px); }
+.naming__input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(18px, 3dvh, 26px);
+  text-align: center;
+  outline: none;
+}
+.naming__input:focus { border-color: #ffd97a; }
+.naming__row { display: flex; gap: 10px; }
+.naming__btn {
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(120deg, #ffd97a, #ffb35c);
+  color: #4a2800;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: clamp(16px, 2.6dvh, 24px);
+  cursor: pointer;
+}
+.naming__btn:disabled { opacity: 0.4; cursor: default; }
+.naming__btn--ghost {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
