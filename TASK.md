@@ -4,9 +4,7 @@
 > spec: `docs/superpowers/specs/2026-07-11-fantastic-beasts-design.md` · plan: `docs/superpowers/plans/2026-07-11-fantastic-beasts-phase1-poc.md`
 
 - [x] Spec + plan + git init
-- [ ] Task 1: Scaffold app (Vite React TS + vitest)
-
-
+- [x] Task 1: Scaffold app (Vite React TS + vitest) ✅
 - [x] Task 2: growth engine (TDD 13 เทส) ✅
 - [x] Task 3: mood engine (TDD 17 เทส) ✅
 - [ ] Task 4: state store + mock feed + **ระบบตั้งชื่อ** (เพิ่มตามคำสั่ง 2026-07-11)
