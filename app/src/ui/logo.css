@@ -16,7 +16,7 @@
 
 /* "Fantastic" — ตัวเอียงนุ่มเหมือนคาถา */
 .fb-logo__fantastic {
-  font-family: "Kanit", sans-serif;
+  font-family: "Mali", sans-serif;
   font-style: italic;
   font-weight: 600;
   font-size: clamp(18px, 2.8dvh, 30px);
@@ -28,8 +28,8 @@
 
 /* "BEASTS" — ตัวใหญ่ไล่เฉดทองเรืองแสง */
 .fb-logo__beasts {
-  font-family: "Kanit", sans-serif;
-  font-weight: 900;
+  font-family: "Mali", sans-serif;
+  font-weight: 700;
   font-size: clamp(30px, 5.2dvh, 56px);
   letter-spacing: 0.14em;
   background: linear-gradient(175deg, #ffe9a8 8%, #ffc24d 45%, #e08a1f 78%, #ffd97a 100%);

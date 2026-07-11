@@ -1,5 +1,6 @@
 /* Fantastic Beasts — base styles (จอ TV landscape) */
-@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800;900&display=swap");
+/* Mali = ฟอนต์ไทยลายมือกลมน่ารัก อ่านง่าย (กติกาเจ้านาย: สไตล์น่ารัก) */
+@import url("https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,400;0,600;0,700;1,500&display=swap");
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -9,7 +10,7 @@ html, body, #root {
 }
 
 body {
-  font-family: "Kanit", system-ui, sans-serif;
+  font-family: "Mali", "Kanit", system-ui, sans-serif;
   /* ค่ำคืนเวทมนตร์ navy→violet */
   background: linear-gradient(160deg, #0d1033 0%, #1a1450 55%, #2a1a5e 100%);
   color: #f4f1ff;

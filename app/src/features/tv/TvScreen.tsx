@@ -1,7 +1,6 @@
 // จอ TV หลัก — สัตว์กลางจอ + หลอดโต + ticker + ป้ายยอดเข้า + ตั้งชื่อตอนฟัก
 
 import { useEffect, useMemo, useState } from "react";
-import { nextStageInfo, progressRatio } from "../../domain/growth";
 import type { SaleEvent } from "../../domain/types";
 import { currentStage, isHatched } from "../../state/gameState";
 import { useGameStore } from "../../state/useGameStore";
@@ -35,8 +34,6 @@ function baht(n: number): string {
 export function TvScreen() {
   const { state, mood, feed, feeding, startFeeding, pauseFeeding } = useGameStore();
   const stage = currentStage(state);
-  const ratio = progressRatio(state.points, state.goalPoints);
-  const next = nextStageInfo(state.points, state.goalPoints);
   const hatched = isHatched(state);
 
   // ป้ายยอดเข้าล่าสุด (โชว์ 6 วิแล้วจาง) — เด้งเฉพาะยอดที่เข้าหลังเปิดจอ
@@ -119,24 +116,9 @@ export function TvScreen() {
       </main>
 
       <footer className="tv__bottom">
-        <div className="tv__progress">
-          <div className="tv__progress-head">
-            <span className="tv__stage-label">{STAGE_LABEL[stage]}</span>
-            <span className="tv__points">
-              {baht(state.points)} / {baht(state.goalPoints)} แต้ม ({Math.floor(ratio * 100)}%)
-            </span>
-            {next && (
-              <span className="tv__next">อีก {baht(next.pointsNeeded)} → {STAGE_LABEL[next.stage]}</span>
-            )}
-          </div>
-          <div className="tv__bar">
-            <div className="tv__bar-fill" style={{ width: `${ratio * 100}%` }} />
-            <div className="tv__bar-marks" aria-hidden>
-              <span style={{ left: "10%" }} /><span style={{ left: "30%" }} /><span style={{ left: "60%" }} />
-            </div>
-          </div>
-        </div>
+        {/* ไม่โชว์แต้ม/เป้า/หลอดโต — ให้ทีมลุ้นเองว่าน้องจะโตตอนไหน (กติกาเจ้านาย) */}
         <div className="tv__ticker">
+          <span className="tv__stage-label">{STAGE_LABEL[stage]}</span>
           <span className="tv__today">วันนี้ {baht(todayTotal)} บาท</span>
           {recent.map((e) => (
             <span key={e.id} className="tv__tick">

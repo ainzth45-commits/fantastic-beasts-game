@@ -48,7 +48,7 @@
 }
 .tv__name-text {
   font-size: clamp(26px, 4.6dvh, 48px);
-  font-weight: 900;
+  font-weight: 700;
   color: #fff;
   text-shadow: 0 0 24px rgba(168, 130, 255, 0.8);
 }
@@ -102,7 +102,7 @@
   border-radius: 999px;
   background: linear-gradient(120deg, rgba(255, 217, 122, 0.95), rgba(255, 170, 90, 0.95));
   color: #4a2800;
-  font-weight: 900;
+  font-weight: 700;
   font-size: clamp(18px, 3.2dvh, 34px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   animation: toast-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2), toast-out 0.6s ease 5.4s forwards;
@@ -129,7 +129,7 @@
 }
 .tv__stage-label {
   font-size: clamp(18px, 3dvh, 30px);
-  font-weight: 900;
+  font-weight: 700;
   color: #ffd97a;
 }
 .tv__points {
@@ -176,7 +176,7 @@
   font-size: clamp(13px, 2dvh, 20px);
 }
 .tv__today {
-  font-weight: 800;
+  font-weight: 700;
   color: #9df0b1;
   flex-shrink: 0;
 }
@@ -226,7 +226,7 @@
   0%, 100% { scale: 1; }
   50% { scale: 1.08; }
 }
-.tv__gate-title { font-size: clamp(26px, 4.8dvh, 44px); font-weight: 900; color: #cdb9ff; }
+.tv__gate-title { font-size: clamp(26px, 4.8dvh, 44px); font-weight: 700; color: #cdb9ff; }
 .tv__gate-lead { opacity: 0.85; font-size: clamp(15px, 2.5dvh, 22px); }
 .tv__gate-btn {
   margin-top: 6px;
@@ -236,7 +236,7 @@
   background: linear-gradient(120deg, #ffd97a, #ffb35c);
   color: #4a2800;
   font-family: inherit;
-  font-weight: 900;
+  font-weight: 700;
   font-size: clamp(20px, 3.6dvh, 34px);
   cursor: pointer;
   box-shadow: 0 8px 28px rgba(255, 190, 80, 0.45);
@@ -274,7 +274,7 @@
   0%, 100% { rotate: -6deg; }
   50% { rotate: 6deg; }
 }
-.naming__title { font-size: clamp(24px, 4.4dvh, 40px); font-weight: 900; color: #ffd97a; }
+.naming__title { font-size: clamp(24px, 4.4dvh, 40px); font-weight: 700; color: #ffd97a; }
 .naming__lead { opacity: 0.85; font-size: clamp(14px, 2.4dvh, 20px); }
 .naming__input {
   width: 100%;
@@ -297,7 +297,7 @@
   background: linear-gradient(120deg, #ffd97a, #ffb35c);
   color: #4a2800;
   font-family: inherit;
-  font-weight: 900;
+  font-weight: 700;
   font-size: clamp(16px, 2.6dvh, 24px);
   cursor: pointer;
 }
