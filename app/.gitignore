@@ -29,3 +29,4 @@ dist-ssr
 # source PNG ของงานศิลป์ (เสิร์ฟจริงเป็น webp) — เก็บบนดิสก์แต่ไม่ track
 public/assets/*.png
 !public/assets/concepts/
+public/assets/beast-easy/*.png

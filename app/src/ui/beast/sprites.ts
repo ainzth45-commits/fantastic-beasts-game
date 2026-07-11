@@ -25,7 +25,7 @@ function poseFor(mood: Mood, blinking: boolean): Pose {
 const AVAILABLE: Partial<Record<Stage, Partial<Record<Pose, string>>>> = {
   egg: { idle: "egg-idle", happy: "egg-happy", sleep: "egg-sleep" },
   cracking: { idle: "cracking-idle", happy: "cracking-happy", sleep: "cracking-sleep" },
-  peeking: { idle: "peeking-idle" },
+  peeking: { idle: "peeking-idle", blink: "peeking-blink", happy: "peeking-happy", sad: "peeking-sad", sleep: "peeking-sleep" },
   child: { idle: "child-idle", blink: "child-blink", happy: "child-happy", sad: "child-sad", sleep: "child-sleep" },
 };
 
