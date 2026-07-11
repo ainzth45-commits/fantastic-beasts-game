@@ -6,6 +6,7 @@ import { currentStage, isHatched } from "../../state/gameState";
 import { useGameStore } from "../../state/useGameStore";
 import { Beast } from "../../ui/beast/Beast";
 import { Logo } from "../../ui/Logo";
+import { StageBackground } from "../../ui/StageBackground";
 import { DevPanel } from "../dev/DevPanel";
 import { NamingOverlay } from "./NamingOverlay";
 import "./tv.css";
@@ -63,8 +64,8 @@ export function TvScreen() {
 
   return (
     <div className="tv">
-      {/* ฉากทุ่งหญ้าเวทมนตร์ (Codex) — ใช้ <img> เพื่อให้ base path ถูกทั้ง dev/Pages */}
-      <img className="tv__bg" src={`${import.meta.env.BASE_URL}assets/bg-meadow.webp`} alt="" aria-hidden />
+      {/* ฉากเปลี่ยนตามขั้นการเติบโต (Codex) + crossfade */}
+      <StageBackground stage={stage} />
       <header className="tv__top">
         <Logo compact />
         <div className="tv__name">

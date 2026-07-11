@@ -11,26 +11,7 @@
   overflow: hidden;
 }
 
-/* ฉากทุ่งหญ้าเวทมนตร์ (ภาพจาก Codex) — เต็มจอหลังทุกอย่าง */
-.tv__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-  user-select: none;
-  pointer-events: none;
-}
-/* ม่านมืดจางๆ ขอบจอ ให้ตัวหนังสือ/สัตว์เด่นจากภาพฉาก */
-.tv::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 45%, rgba(10, 8, 40, 0) 40%, rgba(10, 8, 40, 0.38) 100%);
-}
+/* ฉากหลัง = <StageBackground> (เปลี่ยนตามขั้นโต + มี scrim ในตัว) */
 
 /* ===== แถวบน: logo · ชื่อ · อารมณ์ ===== */
 .tv__top {
