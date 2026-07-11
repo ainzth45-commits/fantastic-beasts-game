@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# iCloud duplicate conflict copies
+* [23].*
