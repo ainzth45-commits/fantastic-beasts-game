@@ -12,7 +12,7 @@
 - [x] Task 6: Beast component + แอนิเมชันมีชีวิต (หายใจ/กะพริบสุ่ม/quirk/mood/เด้งรับยอด) ✅
 - [x] Task 7: จอ TV + logo wordmark + naming + dev panel + **ระบบเริ่มเลี้ยง/พักเลี้ยง** (เพิ่มตามคำสั่ง) ✅
 - [x] Task 8: deploy GitHub Pages เขียว + เทสเว็บจริงผ่าน (https://ainzth45-commits.github.io/fantastic-beasts-game/) ✅
-- [ ] Task 9: (กำลังทำ) รอ Codex: logo emblem + code review → แก้ตาม → LINE สรุปส่งงาน
+- [x] Task 9: Codex review 5 findings → แก้ครบ (dailyTotals/midnight/sanitize/timers/build) + logo เต็ม + พื้นหลัง + ฟอนต์ Mali + ซ่อนเป้า + ระบบเริ่ม/พักเลี้ยง · เทส 50 ผ่าน · เว็บจริงเทสแล้ว ✅ **เฟส 1 จบ**
 
 ## บันทึกการอนุมัติแทน (auto-approve log) — เพิ่มเติม
 - 13:21 สร้าง GitHub repo สาธารณะ `fantastic-beasts-game` (จำเป็นสำหรับ Pages ฟรี แพทเทิร์นเดียวกับเกมที่1) — แจ้งขอไว้ 13:15 ไม่มีคำตอบใน 5 นาที
