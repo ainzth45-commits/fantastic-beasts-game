@@ -50,3 +50,11 @@
 ## เฟส 3 — log
 - 3.1 เสร็จ: DB พร้อมอยู่แล้ว (anon SELECT sales/employees/teams + sales ใน realtime publication — dashboard เดิมปูทาง) ไม่ต้องแก้ DB
 - auto-approve: ใช้ Supabase publishable key ฝังใน client (ออกแบบมาให้ public + pattern เดียวกับ dashboard เดิม) แทน inject ผ่าน secret
+
+## เฟส 3 — เสร็จสมบูรณ์ (2026-07-11 17:05) ✅
+- ฟีดยอดจริง Supabase ทำงานบนเว็บจริง — พิสูจน์ end-to-end: ยอดจริง "เตย มนัสนันท์ +1,790" (sale id 10785) เข้าจอสด ยอดวันขยับตรงเป๊ะ อารมณ์เปลี่ยน
+- เชื่อมเฉพาะช่วงเปิดเลี้ยง · dedupe/แก้/ลบยอดรองรับ (ledger counted) · badge สถานะเชื่อมต่อ · toast รูปพนักงาน · mock ผ่าน ?mock=1 · export/import แต้ม
+- 74 เทสผ่าน · deploy เขียว (72c189d — มี 1 commit พังก่อนหน้า 2b01e3b fix ทันที)
+### งานต่อจากนี้ (session หน้า)
+1. ⏸WAIT[Codex limit] ปิดเฟส 2: junior→teen→grown/adult (บรีฟ docs/art-briefs/phase2-remaining-unisheep.md)
+2. เฟส 4A วงจรรอบเกม (โค้ดล้วน ทำได้เลย) → ตาม master roadmap
