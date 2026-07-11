@@ -1,0 +1,120 @@
+/* Intro splash — logo กลางจอ → บินย่อไปมุมซ้ายบน + เปิดหน้าเกม */
+
+.app-stage {
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.95s ease, transform 0.95s ease;
+}
+/* ระหว่าง logo อยู่กลางจอ → ซ่อนเกมไว้ก่อน */
+.app-stage--enter {
+  opacity: 0;
+  transform: scale(1.04);
+}
+/* พอ logo เริ่มบินเข้ามุม → เกม fade+zoom เข้ามา */
+.app-stage--move,
+.app-stage--done {
+  opacity: 1;
+  transform: none;
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  overflow: hidden;
+  background: #0d1033; /* กันขอบวูบระหว่างภาพโหลด */
+}
+
+/* ฉากทุ่งหญ้าเวทมนตร์ ค่อยๆ ซูม-แพนช้าๆ ให้ดูมีชีวิต (ไม่ใช่พื้นสีนิ่ง) */
+.intro__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: intro-kenburns 12s ease-in-out infinite alternate;
+  transition: opacity 1.1s ease;
+}
+@keyframes intro-kenburns {
+  0% { transform: scale(1.06) translate(-1%, 1%); }
+  100% { transform: scale(1.14) translate(1.5%, -1.5%); }
+}
+/* ม่านมืดจางๆ ให้ logo เด่นเหนือฉาก */
+.intro__scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(13, 16, 51, 0.15) 30%, rgba(13, 16, 51, 0.62) 100%);
+  transition: opacity 1.1s ease;
+}
+/* พอย้ายเข้ามุม → ฉาก intro จางหาย เผยหน้าเกมด้านหลัง */
+.intro--move .intro__bg,
+.intro--move .intro__scrim {
+  opacity: 0;
+}
+
+.intro__logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(540px, 60vw);
+  translate: -50% -50%;
+  filter: drop-shadow(0 14px 44px rgba(0, 0, 0, 0.5));
+  transition:
+    top 1.15s cubic-bezier(0.62, 0, 0.2, 1),
+    left 1.15s cubic-bezier(0.62, 0, 0.2, 1),
+    width 1.15s cubic-bezier(0.62, 0, 0.2, 1),
+    translate 1.15s cubic-bezier(0.62, 0, 0.2, 1);
+}
+/* โผล่มาแบบป็อป + เรืองแสงเต้นเบาๆ ระหว่างค้าง */
+.intro--enter .intro__logo {
+  animation:
+    intro-pop 0.95s cubic-bezier(0.2, 0.9, 0.3, 1.35) both,
+    intro-glow 2.2s ease-in-out 0.95s infinite;
+}
+@keyframes intro-pop {
+  0% { opacity: 0; scale: 0.35; rotate: -8deg; }
+  55% { opacity: 1; scale: 1.08; rotate: 2deg; }
+  100% { opacity: 1; scale: 1; rotate: 0deg; }
+}
+@keyframes intro-glow {
+  0%, 100% { filter: drop-shadow(0 14px 44px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 18px rgba(255, 210, 120, 0.22)); }
+  50% { filter: drop-shadow(0 14px 44px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 36px rgba(255, 210, 120, 0.55)); }
+}
+/* ปลายทาง = ตำแหน่ง+ขนาดของ logo มุมซ้ายบนในเกม (fb-logo--compact) */
+.intro--move .intro__logo {
+  top: clamp(10px, 2dvh, 24px);
+  left: clamp(16px, 3vw, 40px);
+  width: clamp(120px, 17dvh, 200px);
+  translate: 0 0;
+}
+
+/* ประกายดาวรอบ logo ตอนโผล่ (จางหายตอนบินเข้ามุม) */
+.intro__sparkles {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(620px, 70vw);
+  aspect-ratio: 1.4;
+  translate: -50% -50%;
+  transition: opacity 0.5s ease;
+}
+.intro--move .intro__sparkles { opacity: 0; }
+.intro__sparkles span {
+  position: absolute;
+  font-size: clamp(18px, 3dvh, 34px);
+  color: #ffe9a8;
+  text-shadow: 0 0 12px rgba(255, 220, 130, 0.9);
+  opacity: 0;
+  animation: intro-twinkle 2.2s ease-in-out infinite;
+}
+.intro__sparkles span:nth-child(1) { top: 6%; left: 14%; animation-delay: 0.4s; }
+.intro__sparkles span:nth-child(2) { top: 22%; left: 88%; animation-delay: 0.9s; color: #cdb9ff; }
+.intro__sparkles span:nth-child(3) { top: 78%; left: 8%; animation-delay: 1.3s; }
+.intro__sparkles span:nth-child(4) { top: 88%; left: 78%; animation-delay: 0.6s; }
+.intro__sparkles span:nth-child(5) { top: 4%; left: 62%; animation-delay: 1.6s; color: #cdb9ff; }
+.intro__sparkles span:nth-child(6) { top: 66%; left: 94%; animation-delay: 1.1s; }
+@keyframes intro-twinkle {
+  0%, 100% { opacity: 0; scale: 0.6; }
+  50% { opacity: 1; scale: 1.15; }
+}
