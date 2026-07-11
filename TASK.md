@@ -7,12 +7,15 @@
 - [x] Task 1: Scaffold app (Vite React TS + vitest) ✅
 - [x] Task 2: growth engine (TDD 13 เทส) ✅
 - [x] Task 3: mood engine (TDD 17 เทส) ✅
-- [ ] Task 4: state store + mock feed + **ระบบตั้งชื่อ** (เพิ่มตามคำสั่ง 2026-07-11)
-- [ ] Task 5: ศิลป์ Codex — สัตว์ตัวง่าย (concept → gen → ตรวจ → webp)
-- [ ] Task 6: Beast component + แอนิเมชัน
-- [ ] Task 7: จอ TV + logo + dev panel
-- [ ] Task 8: verify + deploy GitHub Pages
-- [ ] Task 9: self-review จนมั่นใจ (แก้จนกว่าจะมั่นใจ) → ส่ง Codex รีวิวหาจุดพลาด → แก้ตาม → LINE สรุปส่งงาน
+- [x] Task 4: state store + mock feed + ระบบตั้งชื่อ ✅
+- [x] Task 5: ศิลป์ Codex — concept 3 ตัว + sprite แกะยูนิคอร์น 8 ท่า (ตรวจตาแล้ว ตัวเดิมทุกภาพ) ✅
+- [x] Task 6: Beast component + แอนิเมชันมีชีวิต (หายใจ/กะพริบสุ่ม/quirk/mood/เด้งรับยอด) ✅
+- [x] Task 7: จอ TV + logo wordmark + naming + dev panel + **ระบบเริ่มเลี้ยง/พักเลี้ยง** (เพิ่มตามคำสั่ง) ✅
+- [x] Task 8: deploy GitHub Pages เขียว + เทสเว็บจริงผ่าน (https://ainzth45-commits.github.io/fantastic-beasts-game/) ✅
+- [ ] Task 9: (กำลังทำ) รอ Codex: logo emblem + code review → แก้ตาม → LINE สรุปส่งงาน
+
+## บันทึกการอนุมัติแทน (auto-approve log) — เพิ่มเติม
+- 13:21 สร้าง GitHub repo สาธารณะ `fantastic-beasts-game` (จำเป็นสำหรับ Pages ฟรี แพทเทิร์นเดียวกับเกมที่1) — แจ้งขอไว้ 13:15 ไม่มีคำตอบใน 5 นาที
 
 ## กติกาจากเจ้านาย (ระหว่างทำ)
 - 🌟 **สำคัญเท่าระบบ: สัตว์ต้อง "น่ารัก" และ "ดูมีชีวิต"** — มาทื่อๆ ไม่ได้ ต้องกระตุ้นความอยากเลี้ยง → ลงน้ำหนักศิลป์+แอนิเมชัน: idle หลายท่าสุ่มจังหวะ (หายใจ/กะพริบ/เหลือบมอง/กระดิก), squash & stretch, ปฏิกิริยามีนิสัย
