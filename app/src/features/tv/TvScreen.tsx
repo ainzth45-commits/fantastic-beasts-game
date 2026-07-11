@@ -38,7 +38,7 @@ function baht(n: number): string {
 }
 
 export function TvScreen() {
-  const { state, mood, feed, feeding, startFeeding, pauseFeeding, todayTotal } = useGameStore();
+  const { state, mood, feed, feeding, startFeeding, pauseFeeding, todayTotal, feedStatus } = useGameStore();
   const stage = currentStage(state);
   const hatched = isHatched(state);
 
@@ -112,11 +112,27 @@ export function TvScreen() {
         <Beast stage={stage} mood={mood} feedPulse={feedPulse} />
         {toast && (
           <div className="tv__toast" key={toast.id}>
-            <span className="tv__toast-emoji">🍖</span>
+            {toast.employeePhotoUrl ? (
+              <img
+                className="tv__toast-photo"
+                src={toast.employeePhotoUrl}
+                alt=""
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+              />
+            ) : (
+              <span className="tv__toast-emoji">🍖</span>
+            )}
             <span className="tv__toast-text">
               {toast.employeeName ? `${toast.employeeName} ป้อน` : "มีอาหารมาส่ง"} {baht(toast.amount)} บาท!
             </span>
           </div>
+        )}
+        {/* badge หลุดการเชื่อมต่อ — โชว์เฉพาะตอนเปิดเลี้ยงแต่ฟีดยอดจริงไม่ติด */}
+        {feeding && feedStatus === "connecting" && (
+          <div className="tv__feed-badge">📡 กำลังเชื่อมต่อยอดขาย…</div>
+        )}
+        {feeding && feedStatus === "error" && (
+          <div className="tv__feed-badge tv__feed-badge--error">⚠️ เชื่อมต่อยอดขายไม่ได้ — เช็กเน็ตแล้วกดพัก/เลี้ยงต่อใหม่</div>
         )}
       </main>
 

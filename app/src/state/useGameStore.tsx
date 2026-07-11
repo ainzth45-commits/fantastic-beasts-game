@@ -1,10 +1,29 @@
 // store กลาง — React context บางๆ ครอบ pure state + persist localStorage
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { startSalesFeed, type SalesFeed } from "../data/salesFeed";
 import { DEFAULT_MOOD_CONFIG, moodFor, type MoodConfig } from "../domain/mood";
 import type { Mood, SaleEvent } from "../domain/types";
-import { feedSale, resetGame, sanitizeGameState, setBeastName, todayTotal as todayTotalOf, type GameState } from "./gameState";
+import {
+  applySaleDelete,
+  applySaleUpdate,
+  feedSale,
+  resetGame,
+  sanitizeGameState,
+  setBeastName,
+  todayTotal as todayTotalOf,
+  type GameState,
+} from "./gameState";
 import { loadJson, saveJson } from "./persist";
+
+/** โหมด mock (แผงเดโมยิงยอดเอง ไม่ต่อ Supabase) — เปิดด้วย ?mock=1 */
+function isMockMode(): boolean {
+  try {
+    return new URLSearchParams(window.location.search).get("mock") === "1";
+  } catch {
+    return false;
+  }
+}
 
 const STORAGE_KEY = "fantastic-beasts/game-v1";
 
@@ -27,6 +46,8 @@ interface StoreValue {
   todayTotal: number;
   /** นาฬิกากลาง (ms) — เดินทุก 30 วิ ให้ UI ที่อิงเวลา re-render */
   nowMs: number;
+  /** สถานะฟีดยอดจริง: "mock" | "connected" | "connecting" | "error" */
+  feedStatus: "mock" | "connected" | "connecting" | "error";
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -84,6 +105,44 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
     [feeding, forcedMood, moodConfig],
   );
 
+  // ฟีดยอดจริง Supabase — เชื่อมเฉพาะช่วงเปิดเลี้ยง (ยอดตอนพักไม่นับ ตามกติกา)
+  const [feedStatus, setFeedStatus] = useState<StoreValue["feedStatus"]>(isMockMode() ? "mock" : "connecting");
+  const feedRef = useRef<SalesFeed | null>(null);
+  const feedingRef = useRef(feeding);
+  feedingRef.current = feeding;
+
+  useEffect(() => {
+    if (!feeding || isMockMode()) return;
+    let cancelled = false;
+    setFeedStatus("connecting");
+    startSalesFeed({
+      onSale: (sale) => {
+        if (!feedingRef.current) return;
+        setState((current) => {
+          const moodAtSale = moodFor(current.events, new Date(), moodConfig, {
+            ignoreSleep: true,
+            todayTotal: todayTotalOf(current, Date.now()),
+          });
+          return feedSale(current, sale, moodAtSale);
+        });
+        setNowTick(Date.now());
+      },
+      onSaleUpdated: (id, amount, at) => setState((c) => applySaleUpdate(c, id, amount, at)),
+      onSaleDeleted: (id, at) => setState((c) => applySaleDelete(c, id, at)),
+      onStatus: (ok) => !cancelled && setFeedStatus(ok ? "connected" : "connecting"),
+    })
+      .then((feed) => {
+        if (cancelled) feed.stop();
+        else feedRef.current = feed;
+      })
+      .catch(() => !cancelled && setFeedStatus("error"));
+    return () => {
+      cancelled = true;
+      feedRef.current?.stop();
+      feedRef.current = null;
+    };
+  }, [feeding, moodConfig]);
+
   const startFeeding = useCallback(() => setFeeding(true), []);
   const pauseFeeding = useCallback(() => setFeeding(false), []);
 
@@ -91,8 +150,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   const reset = useCallback(() => setState((c) => resetGame(c)), []);
 
   const value = useMemo(
-    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick }),
-    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, todayTotal, nowTick],
+    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick, feedStatus }),
+    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, todayTotal, nowTick, feedStatus],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
