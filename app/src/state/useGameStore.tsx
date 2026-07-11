@@ -39,6 +39,9 @@ interface StoreValue {
   feed: (sale: SaleEvent) => void;
   nameBeast: (name: string) => void;
   reset: () => void;
+  /** สำรอง/กู้คืนแต้มทั้งหมด (JSON) — กันแต้มหายถ้าเครื่อง/เบราว์เซอร์มีปัญหา */
+  exportState: () => string;
+  importState: (json: string) => boolean;
   /** POC: บังคับอารมณ์จาก DevPanel (null = คำนวณจริง) */
   forcedMood: Mood | null;
   setForcedMood: (m: Mood | null) => void;
@@ -148,6 +151,18 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
 
   const nameBeast = useCallback((name: string) => setState((c) => setBeastName(c, name)), []);
   const reset = useCallback(() => setState((c) => resetGame(c)), []);
+
+  const exportState = useCallback(() => JSON.stringify(state, null, 2), [state]);
+  const importState = useCallback((json: string): boolean => {
+    try {
+      const parsed: unknown = JSON.parse(json);
+      if (!parsed || typeof parsed !== "object") return false;
+      setState(sanitizeGameState(parsed)); // sanitize เสมอ — ไฟล์เพี้ยนต้องไม่ทำเกมพัง
+      return true;
+    } catch {
+      return false;
+    }
+  }, []);
 
   const value = useMemo(
     () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick, feedStatus }),

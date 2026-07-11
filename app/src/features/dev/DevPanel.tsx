@@ -29,8 +29,35 @@ const MOODS: Array<{ value: Mood; label: string }> = [
 ];
 
 export function DevPanel({ onMockSale }: { onMockSale: (sale: SaleEvent) => void }) {
-  const { forcedMood, setForcedMood, reset } = useGameStore();
+  const { forcedMood, setForcedMood, reset, exportState, importState } = useGameStore();
   const [open, setOpen] = useState(false);
+
+  // สำรองแต้มเป็นไฟล์ JSON (กันหายถ้าล้าง cache/เปลี่ยนเครื่อง)
+  function doExport() {
+    const blob = new Blob([exportState()], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `fantastic-beasts-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function doImport() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const ok = importState(String(reader.result ?? ""));
+        window.alert(ok ? "กู้คืนแต้มสำเร็จ ✅" : "ไฟล์ไม่ถูกต้อง กู้คืนไม่ได้ ❌");
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
 
   if (!open) {
     return (
@@ -74,7 +101,10 @@ export function DevPanel({ onMockSale }: { onMockSale: (sale: SaleEvent) => void
         </div>
       </div>
       <div className="dev__group">
+        <span>สำรอง/กู้คืนแต้ม</span>
         <div className="dev__row">
+          <button type="button" onClick={doExport}>📤 สำรองแต้ม</button>
+          <button type="button" onClick={doImport}>📥 กู้คืนแต้ม</button>
           <button type="button" className="dev__danger" onClick={() => { if (window.confirm("รีเซ็ตกลับไข่?")) reset(); }}>
             ♻️ รีเซ็ตเกม
           </button>
