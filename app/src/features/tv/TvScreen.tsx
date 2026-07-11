@@ -39,17 +39,19 @@ export function TvScreen() {
   const next = nextStageInfo(state.points, state.goalPoints);
   const hatched = isHatched(state);
 
-  // ป้ายยอดเข้าล่าสุด (โชว์ 6 วิแล้วจาง)
+  // ป้ายยอดเข้าล่าสุด (โชว์ 6 วิแล้วจาง) — เด้งเฉพาะยอดที่เข้าหลังเปิดจอ
+  // กันเคสรีเฟรชแล้ว event เก่าจาก localStorage เด้งซ้ำ
   const [toast, setToast] = useState<SaleEvent | null>(null);
   const [feedPulse, setFeedPulse] = useState(0);
+  const [mountedAt] = useState(() => Date.now());
   const latest = state.events.length > 0 ? state.events[state.events.length - 1] : null;
   useEffect(() => {
-    if (!latest) return;
+    if (!latest || latest.at < mountedAt) return;
     setToast(latest);
     setFeedPulse((p) => p + 1);
     const t = window.setTimeout(() => setToast(null), 6000);
     return () => window.clearTimeout(t);
-  }, [latest]);
+  }, [latest, mountedAt]);
 
   // ตั้งชื่อ: เด้งเองครั้งแรกที่ฟัก + เปิดซ้ำได้จากปุ่ม
   const [namingOpen, setNamingOpen] = useState(false);
