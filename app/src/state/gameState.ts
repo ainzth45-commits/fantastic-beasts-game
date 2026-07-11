@@ -21,6 +21,11 @@ export interface GameState {
    * แยกจาก events เพราะ events ถูกตัดเหลือ MAX_EVENTS (วันยอดเยอะจะ undercount)
    */
   dailyTotals: Record<string, number>;
+  /**
+   * ยอดที่นับแต้มไปแล้ว (saleId → {amount, points}) — สำหรับยอดจริงจาก Supabase:
+   * กันนับซ้ำตอน reconnect + รองรับยอดถูกแก้/ลบใน CRM (ปรับ/หักแต้มตามจริง)
+   */
+  counted: Record<string, { amount: number; points: number }>;
 }
 
 /** เก็บยอดรายวันย้อนหลังกี่วัน (กัน localStorage บวม) */
@@ -45,12 +50,14 @@ export function initialState(tier: BeastTier = "easy"): GameState {
     carryOver: false,
     events: [],
     dailyTotals: {},
+    counted: {},
   };
 }
 
-/** ยอดขายเข้า — คิดแต้มตามอารมณ์ขณะนั้น บันทึก event + สะสมยอดรายวัน */
+/** ยอดขายเข้า — คิดแต้มตามอารมณ์ขณะนั้น บันทึก event + สะสมยอดรายวัน + จำว่านับแล้ว */
 export function feedSale(state: GameState, sale: SaleEvent, moodAtSale: Mood): GameState {
   if (sale.amount <= 0) return state; // ยอดสกปรก ไม่รับ
+  if (state.counted[sale.id]) return state; // นับไปแล้ว (reconnect/event ซ้ำ) — เมิน
   const gained = pointsFor(sale.amount, moodAtSale, state.carryOver);
   const events = [...state.events, sale].slice(-MAX_EVENTS);
   const key = dateKey(sale.at);
@@ -63,7 +70,50 @@ export function feedSale(state: GameState, sale: SaleEvent, moodAtSale: Mood): G
   for (const old of keys.slice(0, Math.max(0, keys.length - DAILY_KEEP_DAYS))) {
     delete dailyTotals[old];
   }
-  return { ...state, points: state.points + gained, events, dailyTotals };
+  const counted = { ...state.counted, [sale.id]: { amount: sale.amount, points: gained } };
+  return { ...state, points: state.points + gained, events, dailyTotals, counted };
+}
+
+/**
+ * ยอดใน CRM ถูก "แก้จำนวนเงิน" หลังนับแต้มไปแล้ว → ปรับแต้มตามสัดส่วน
+ * (คงตัวคูณอารมณ์เดิม ณ ตอนขาย: newPoints = oldPoints × newAmount/oldAmount)
+ */
+export function applySaleUpdate(state: GameState, saleId: string, newAmount: number, at: number): GameState {
+  const rec = state.counted[saleId];
+  if (!rec) return state; // ไม่เคยนับ (เข้าตอนปิดเลี้ยง) — ไม่เกี่ยวกับเรา
+  if (newAmount <= 0) return applySaleDelete(state, saleId, at); // แก้เหลือ 0 = เท่ากับลบ
+  if (newAmount === rec.amount) return state;
+  const newPoints = rec.points * (newAmount / rec.amount);
+  const dayKey = dateKey(at);
+  const dailyTotals = {
+    ...state.dailyTotals,
+    [dayKey]: Math.max(0, (state.dailyTotals[dayKey] ?? 0) + (newAmount - rec.amount)),
+  };
+  return {
+    ...state,
+    points: Math.max(0, state.points - rec.points + newPoints),
+    dailyTotals,
+    counted: { ...state.counted, [saleId]: { amount: newAmount, points: newPoints } },
+  };
+}
+
+/** ยอดใน CRM ถูก "ลบ" หลังนับแต้มไปแล้ว → หักแต้มคืนเท่าที่เคยให้ */
+export function applySaleDelete(state: GameState, saleId: string, at: number): GameState {
+  const rec = state.counted[saleId];
+  if (!rec) return state;
+  const dayKey = dateKey(at);
+  const counted = { ...state.counted };
+  delete counted[saleId];
+  return {
+    ...state,
+    points: Math.max(0, state.points - rec.points),
+    dailyTotals: {
+      ...state.dailyTotals,
+      [dayKey]: Math.max(0, (state.dailyTotals[dayKey] ?? 0) - rec.amount),
+    },
+    counted,
+    events: state.events.filter((e) => e.id !== saleId),
+  };
 }
 
 /** ยอดวันนี้ (จาก aggregate ไม่ใช่ event log ที่ถูก cap) */
@@ -121,6 +171,17 @@ export function sanitizeGameState(raw: unknown): GameState {
       if (typeof v === "number" && Number.isFinite(v) && v >= 0) dailyTotals[k] = v;
     }
   }
+  const counted: Record<string, { amount: number; points: number }> = {};
+  if (r.counted && typeof r.counted === "object") {
+    for (const [k, v] of Object.entries(r.counted as Record<string, unknown>)) {
+      if (v && typeof v === "object") {
+        const c = v as Record<string, unknown>;
+        if (typeof c.amount === "number" && Number.isFinite(c.amount) && typeof c.points === "number" && Number.isFinite(c.points)) {
+          counted[k] = { amount: c.amount, points: c.points };
+        }
+      }
+    }
+  }
 
   return {
     tier,
@@ -133,5 +194,6 @@ export function sanitizeGameState(raw: unknown): GameState {
     carryOver: r.carryOver === true,
     events,
     dailyTotals,
+    counted,
   };
 }

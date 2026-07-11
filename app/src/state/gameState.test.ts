@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { SaleEvent } from "../domain/types";
 import {
   MAX_EVENTS,
+  applySaleDelete,
+  applySaleUpdate,
   currentStage,
   dateKey,
   feedSale,
@@ -103,6 +105,53 @@ describe("gameState actions", () => {
     expect(r.points).toBe(0);
     expect(r.tier).toBe("medium");
     expect(r.beastName).toBeNull();
+  });
+});
+
+describe("ยอดจริงจาก CRM — dedupe/แก้/ลบ (เฟส 3)", () => {
+  const at = new Date(2026, 6, 14, 10).getTime();
+
+  it("event id ซ้ำ (reconnect) ไม่นับซ้ำ", () => {
+    let s = initialState();
+    s = feedSale(s, { id: "s1", amount: 2000, at }, "calm");
+    const after = feedSale(s, { id: "s1", amount: 2000, at }, "calm");
+    expect(after).toBe(s); // ไม่เปลี่ยน state เลย
+    expect(after.points).toBe(2000);
+  });
+
+  it("ยอดถูกแก้จำนวน → ปรับแต้มตามสัดส่วน (คงตัวคูณอารมณ์เดิม)", () => {
+    let s = initialState();
+    s = feedSale(s, { id: "s1", amount: 2000, at }, "happy"); // 2400 แต้ม
+    s = applySaleUpdate(s, "s1", 1000, at); // ครึ่งนึง → 1200 แต้ม
+    expect(s.points).toBe(1200);
+    expect(todayTotal(s, at)).toBe(1000);
+    expect(s.counted["s1"]).toEqual({ amount: 1000, points: 1200 });
+  });
+
+  it("ยอดถูกลบ → หักแต้มคืน + ลบจาก ticker + ยอดวันลด", () => {
+    let s = initialState();
+    s = feedSale(s, { id: "s1", amount: 2000, at }, "calm");
+    s = feedSale(s, { id: "s2", amount: 3000, at }, "calm");
+    s = applySaleDelete(s, "s1", at);
+    expect(s.points).toBe(3000);
+    expect(todayTotal(s, at)).toBe(3000);
+    expect(s.counted["s1"]).toBeUndefined();
+    expect(s.events.map((e) => e.id)).toEqual(["s2"]);
+  });
+
+  it("แก้/ลบยอดที่ไม่เคยนับ (เข้าตอนปิดเลี้ยง) → ไม่กระทบ", () => {
+    let s = initialState();
+    s = feedSale(s, { id: "s1", amount: 2000, at }, "calm");
+    expect(applySaleUpdate(s, "unknown", 500, at)).toBe(s);
+    expect(applySaleDelete(s, "unknown", at)).toBe(s);
+  });
+
+  it("แก้เหลือ 0 = ลบ", () => {
+    let s = initialState();
+    s = feedSale(s, { id: "s1", amount: 2000, at }, "calm");
+    s = applySaleUpdate(s, "s1", 0, at);
+    expect(s.points).toBe(0);
+    expect(s.counted["s1"]).toBeUndefined();
   });
 });
 
