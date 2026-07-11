@@ -3,8 +3,18 @@
 /** ระดับความยากของสัตว์ — เลี้ยงครั้งละตัว เริ่มจาก easy */
 export type BeastTier = "easy" | "medium" | "hard";
 
-/** ขั้นการโต 5 ขั้น */
-export type Stage = "egg" | "hatching" | "child" | "teen" | "adult";
+/** ขั้นการโต 10 ร่าง (ไข่ → โตเต็มวัย) */
+export type Stage =
+  | "egg"
+  | "cracking"
+  | "peeking"
+  | "newborn"
+  | "baby"
+  | "child"
+  | "junior"
+  | "teen"
+  | "grown"
+  | "adult";
 
 /** อารมณ์ — มีผลต่อตัวคูณแต้มโต และท่าทางบนจอ */
 export type Mood = "thrilled" | "happy" | "calm" | "lonely" | "sad" | "sleep";
@@ -36,12 +46,17 @@ export const MOOD_MULTIPLIER: Record<Mood, number> = {
   sleep: 1.0, // นอกเวลางานปกติไม่มียอดอยู่แล้ว — ถ้ามี (ยอดดึก) ให้เต็มค่า ไม่ลงโทษ
 };
 
-/** เกณฑ์ % ของเป้า → ขั้นโต */
+/** เกณฑ์ % ของเป้า → ร่าง (10 ร่าง เรียงจากน้อยไปมาก) */
 export const STAGE_THRESHOLDS: Array<{ stage: Stage; atRatio: number }> = [
   { stage: "egg", atRatio: 0 },
-  { stage: "hatching", atRatio: 0.1 },
-  { stage: "child", atRatio: 0.3 },
-  { stage: "teen", atRatio: 0.6 },
+  { stage: "cracking", atRatio: 0.05 },
+  { stage: "peeking", atRatio: 0.12 },
+  { stage: "newborn", atRatio: 0.2 },
+  { stage: "baby", atRatio: 0.3 },
+  { stage: "child", atRatio: 0.42 },
+  { stage: "junior", atRatio: 0.55 },
+  { stage: "teen", atRatio: 0.68 },
+  { stage: "grown", atRatio: 0.83 },
   { stage: "adult", atRatio: 1.0 },
 ];
 

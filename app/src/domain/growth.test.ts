@@ -1,32 +1,54 @@
 import { describe, expect, it } from "vitest";
-import { pointsFor, progressRatio, stageFor } from "./growth";
+import { nextStageInfo, pointsFor, progressRatio, stageFor } from "./growth";
 
 const GOAL = 1_800_000;
 
-describe("stageFor — ขั้นโตตาม % ของเป้า", () => {
-  it("เริ่มที่ไข่", () => {
-    expect(stageFor(0, GOAL)).toBe("egg");
-    expect(stageFor(GOAL * 0.0999, GOAL)).toBe("egg");
+describe("stageFor — 10 ร่างตาม % ของเป้า", () => {
+  // ตาราง (stage, atRatio) — เช็กก่อนถึง (ยังร่างก่อน) + ถึงพอดี (เลื่อนร่าง)
+  const cases: Array<[number, string]> = [
+    [0, "egg"],
+    [0.0499, "egg"],
+    [0.05, "cracking"],
+    [0.1199, "cracking"],
+    [0.12, "peeking"],
+    [0.1999, "peeking"],
+    [0.2, "newborn"],
+    [0.2999, "newborn"],
+    [0.3, "baby"],
+    [0.4199, "baby"],
+    [0.42, "child"],
+    [0.5499, "child"],
+    [0.55, "junior"],
+    [0.6799, "junior"],
+    [0.68, "teen"],
+    [0.8299, "teen"],
+    [0.83, "grown"],
+    [0.9999, "grown"],
+    [1.0, "adult"],
+  ];
+  it.each(cases)("ratio %f → %s", (ratio, stage) => {
+    expect(stageFor(GOAL * ratio, GOAL)).toBe(stage);
   });
-  it("10% → ฟัก", () => {
-    expect(stageFor(GOAL * 0.1, GOAL)).toBe("hatching");
-    expect(stageFor(GOAL * 0.2999, GOAL)).toBe("hatching");
-  });
-  it("30% → เด็ก", () => {
-    expect(stageFor(GOAL * 0.3, GOAL)).toBe("child");
-    expect(stageFor(GOAL * 0.5999, GOAL)).toBe("child");
-  });
-  it("60% → วัยรุ่น", () => {
-    expect(stageFor(GOAL * 0.6, GOAL)).toBe("teen");
-    expect(stageFor(GOAL * 0.9999, GOAL)).toBe("teen");
-  });
-  it("100% → เต็มวัย (เกินเป้าก็ยังเต็มวัย)", () => {
-    expect(stageFor(GOAL, GOAL)).toBe("adult");
+  it("เกินเป้ายังเต็มวัย", () => {
     expect(stageFor(GOAL * 2, GOAL)).toBe("adult");
   });
   it("กันข้อมูลพัง: แต้มติดลบ = ไข่ · เป้า 0/ติดลบ = เต็มวัยทันที (กันหารศูนย์)", () => {
     expect(stageFor(-500, GOAL)).toBe("egg");
     expect(stageFor(0, 0)).toBe("adult");
+  });
+});
+
+describe("nextStageInfo — ร่างถัดไป + แต้มที่ขาด", () => {
+  it("ที่ไข่ (0) → ร่างถัดไป cracking ที่ 5%", () => {
+    const n = nextStageInfo(0, GOAL);
+    expect(n?.stage).toBe("cracking");
+    expect(n?.pointsNeeded).toBe(Math.ceil(GOAL * 0.05));
+  });
+  it("ระหว่าง teen → ถัดไป grown", () => {
+    expect(nextStageInfo(GOAL * 0.7, GOAL)?.stage).toBe("grown");
+  });
+  it("เต็มวัยแล้ว = null", () => {
+    expect(nextStageInfo(GOAL, GOAL)).toBeNull();
   });
 });
 

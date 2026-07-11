@@ -18,32 +18,35 @@ function poseFor(mood: Mood, blinking: boolean): Pose {
 }
 
 /**
- * ไฟล์ที่คาดหวังต่อขั้น (Codex จะ gen มาเติม):
- *   egg:      egg-idle, egg-happy (ไข่สั่น/เรืองแสง)
- *   hatching: hatching-idle (ไข่แตกเห็นหน้า)
- *   child+:   {stage}-idle / -blink / -happy / -sad / -sleep
- * ยังไม่มีไฟล์ → ใช้ fallback เพื่อให้จอไม่พังระหว่างศิลป์ทยอยมา
+ * ไฟล์ sprite ที่ "มีจริงบนดิสก์ ณ ตอนนี้" — เติมทีละร่างเมื่อ Codex gen มา
+ * ชื่อไฟล์ = {stage}-{pose}.webp · ยังไม่มีไฟล์ → fallback ถอยร่างลง จอไม่พังระหว่างศิลป์ทยอยมา
+ * (ครบแล้ว: egg บางท่า, peeking-idle, child ครบ — ที่เหลือ Codex เฟส 2)
  */
 const AVAILABLE: Partial<Record<Stage, Partial<Record<Pose, string>>>> = {
   egg: { idle: "egg-idle", happy: "egg-happy" },
-  hatching: { idle: "hatching-idle" },
+  peeking: { idle: "peeking-idle" },
   child: { idle: "child-idle", blink: "child-blink", happy: "child-happy", sad: "child-sad", sleep: "child-sleep" },
-  // teen/adult เฟสถัดไป — fallback ไปใช้ child ก่อน
 };
 
+/** ถอยร่างลงทีละขั้นเมื่อร่างปัจจุบันยังไม่มีภาพ (egg = ก้นสุด) */
 const STAGE_FALLBACK: Record<Stage, Stage> = {
   egg: "egg",
-  hatching: "egg",
-  child: "hatching",
-  teen: "child",
-  adult: "child",
+  cracking: "egg",
+  peeking: "cracking",
+  newborn: "peeking",
+  baby: "newborn",
+  child: "baby",
+  junior: "child",
+  teen: "junior",
+  grown: "teen",
+  adult: "grown",
 };
 
 export function beastSprite(stage: Stage, mood: Mood, blinking: boolean): string {
   const pose = poseFor(mood, blinking);
   let s: Stage = stage;
-  // ไล่หา sprite ที่มีจริง: ท่าที่ขอ → idle ของขั้นนั้น → ถอยขั้นลง
-  for (let hop = 0; hop < 5; hop += 1) {
+  // ไล่หา sprite ที่มีจริง: ท่าที่ขอ → idle ของร่างนั้น → ถอยร่างลง (สูงสุด 10 ก้าว ครบทุกร่าง)
+  for (let hop = 0; hop < 10; hop += 1) {
     const stagePoses = AVAILABLE[s];
     if (stagePoses) {
       const name = stagePoses[pose] ?? stagePoses.idle;
