@@ -39,10 +39,15 @@ describe("gameState actions", () => {
     expect(feedSale(s0, sale(-100), "calm")).toBe(s0);
   });
 
-  it("ป้อนถึง 10% → ฟัก (isHatched)", () => {
+  it("ตั้งชื่อได้ตอนโผล่พ้นไข่ (peeking 12%) ไม่ใช่ก่อนหน้า", () => {
     let s = initialState();
-    s = feedSale(s, sale(180_000), "calm");
-    expect(currentStage(s)).toBe("hatching");
+    // 5% = ไข่เริ่มแตก (cracking) — ยังตั้งชื่อไม่ได้
+    s = feedSale(s, sale(1_800_000 * 0.06), "calm");
+    expect(currentStage(s)).toBe("cracking");
+    expect(isHatched(s)).toBe(false);
+    // 12% = โผล่พ้นไข่ (peeking) — ตั้งชื่อได้
+    s = feedSale(s, sale(1_800_000 * 0.07), "calm");
+    expect(currentStage(s)).toBe("peeking");
     expect(isHatched(s)).toBe(true);
   });
 

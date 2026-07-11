@@ -22,9 +22,14 @@ const MOOD_LABEL: Record<string, { emoji: string; text: string }> = {
 
 const STAGE_LABEL: Record<string, string> = {
   egg: "ไข่ปริศนา",
-  hatching: "กำลังฟัก",
+  cracking: "ไข่เริ่มแตก",
+  peeking: "โผล่พ้นไข่",
+  newborn: "แรกเกิด",
+  baby: "วัยทารก",
   child: "วัยเด็ก",
+  junior: "เด็กโต",
   teen: "วัยรุ่น",
+  grown: "วัยหนุ่มสาว",
   adult: "โตเต็มวัย",
 };
 

@@ -33,8 +33,8 @@ export function IntroSplash({ children }: { children: ReactNode }) {
       <div className={`app-stage app-stage--${phase}`}>{children}</div>
       {phase !== "done" && (
         <div className={`intro intro--${phase}`} aria-hidden>
-          {/* ฉากป่าเวทมนตร์สดใส ค่อยๆ ซูม (ไม่ใช่พื้นสีนิ่ง) เข้าธีม logo */}
-          <img className="intro__bg" src={`${import.meta.env.BASE_URL}assets/bg-child.webp`} alt="" />
+          {/* ฉากหน้าแรกเฉพาะ intro (ไม่ซ้ำฉากในเกม) ค่อยๆ ซูม ไม่ใช่พื้นสีนิ่ง */}
+          <img className="intro__bg" src={`${import.meta.env.BASE_URL}assets/bg-intro.webp`} alt="" />
           <div className="intro__scrim" />
           <div className="intro__sparkles">
             <span>✦</span><span>✧</span><span>⭐</span><span>✨</span><span>✦</span><span>✧</span>

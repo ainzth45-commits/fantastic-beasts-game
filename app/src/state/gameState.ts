@@ -2,7 +2,7 @@
 
 import { pointsFor, stageFor } from "../domain/growth";
 import type { BeastTier, Mood, SaleEvent, Stage } from "../domain/types";
-import { DEFAULT_GOALS } from "../domain/types";
+import { DEFAULT_GOALS, STAGE_THRESHOLDS } from "../domain/types";
 
 export interface GameState {
   tier: BeastTier;
@@ -81,9 +81,15 @@ export function currentStage(state: GameState): Stage {
   return stageFor(state.points, state.goalPoints);
 }
 
-/** ฟักแล้วหรือยัง — ใช้เปิด overlay ตั้งชื่อ */
+// ลำดับร่างตามการโต (จาก STAGE_THRESHOLDS)
+const STAGE_ORDER = STAGE_THRESHOLDS.map((t) => t.stage);
+
+/**
+ * ฟักพอให้ตั้งชื่อแล้วหรือยัง — ใช้เปิด overlay ตั้งชื่อ
+ * เกณฑ์เจ้านาย: เริ่มตั้งชื่อได้ตอน "โผล่พ้นไข่" (peeking) ครึ่งท่อนบนโผล่มา
+ */
 export function isHatched(state: GameState): boolean {
-  return currentStage(state) !== "egg";
+  return STAGE_ORDER.indexOf(currentStage(state)) >= STAGE_ORDER.indexOf("peeking");
 }
 
 export function resetGame(state: GameState): GameState {

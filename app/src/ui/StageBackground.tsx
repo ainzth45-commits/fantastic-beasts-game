@@ -5,12 +5,22 @@ import { useEffect, useRef, useState } from "react";
 import type { Stage } from "../domain/types";
 import "./stage-bg.css";
 
-// ฉาก 3 ระดับ (Codex): ไข่/ฟัก→bg-egg · เด็ก/วัยรุ่น→bg-child · เต็มวัย→bg-adult
+// ฉากผูกกับ "กลุ่มร่าง" — ร่างในกลุ่มเดียวกันใช้ฉากเดียวกัน (5 กลุ่ม)
+//   ไข่ (egg,cracking)          → bg-egg      ถ้ำคริสตัล
+//   ฟัก/ทารก (peeking,newborn,baby) → bg-nursery เนิร์สเซอรี่
+//   เด็ก (child,junior)          → bg-child    ป่าเวทมนตร์
+//   วัยรุ่น (teen,grown)         → bg-valley   หุบเขาสายลม
+//   เต็มวัย (adult)              → bg-adult    อาณาจักรลอยฟ้า
 const STAGE_BG: Record<Stage, string> = {
   egg: "bg-egg",
-  hatching: "bg-egg",
+  cracking: "bg-egg",
+  peeking: "bg-nursery",
+  newborn: "bg-nursery",
+  baby: "bg-nursery",
   child: "bg-child",
-  teen: "bg-child",
+  junior: "bg-child",
+  teen: "bg-valley",
+  grown: "bg-valley",
   adult: "bg-adult",
 };
 
