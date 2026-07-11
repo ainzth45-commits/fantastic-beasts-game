@@ -12,7 +12,11 @@ interface StoreValue {
   state: GameState;
   mood: Mood;
   moodConfig: MoodConfig;
-  /** ยอดเข้า (mock ตอน POC / Supabase เฟส 2) */
+  /** เปิดรับยอดอยู่ไหม — จอเปิดใหม่เริ่มที่ "พัก" เสมอ ต้องกดเริ่มเลี้ยง/เลี้ยงต่อ */
+  feeding: boolean;
+  startFeeding: () => void;
+  pauseFeeding: () => void;
+  /** ยอดเข้า (mock ตอน POC / Supabase เฟส 2) — ถูกเมินถ้าไม่ได้เปิดเลี้ยง */
   feed: (sale: SaleEvent) => void;
   nameBeast: (name: string) => void;
   reset: () => void;
@@ -31,6 +35,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<GameState>(loadInitial);
   const [forcedMood, setForcedMood] = useState<Mood | null>(null);
   const [nowTick, setNowTick] = useState(() => Date.now());
+  // เปิดจอใหม่ = พักเสมอ (ทีวีไม่ได้เปิดตลอด ต้องกดเริ่มเลี้ยง/เลี้ยงต่อก่อนถึงนับยอด)
+  const [feeding, setFeeding] = useState(false);
   const moodConfig = DEFAULT_MOOD_CONFIG;
 
   // นาฬิกาเดินทุก 30 วิ — อารมณ์เปลี่ยนตามเวลาได้เอง (เหงา/หลับ) โดยไม่ต้องมี event ใหม่
@@ -43,29 +49,35 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
     saveJson(STORAGE_KEY, state);
   }, [state]);
 
+  // พักเลี้ยง = น้องหลับ · เปิดเลี้ยง = ตื่นเสมอ (วันหยุดคนมาทำงานก็เลี้ยงได้)
   const computedMood = useMemo(
-    () => moodFor(state.events, new Date(nowTick), moodConfig),
-    [state.events, nowTick, moodConfig],
+    () => (feeding ? moodFor(state.events, new Date(nowTick), moodConfig, { ignoreSleep: true }) : "sleep"),
+    [feeding, state.events, nowTick, moodConfig],
   );
   const mood = forcedMood ?? computedMood;
 
   const feed = useCallback(
     (sale: SaleEvent) => {
+      if (!feeding) return; // ไม่ได้เปิดเลี้ยง = ไม่นับยอด (กติกาเจ้านาย)
       setState((current) => {
-        const moodAtSale = forcedMood ?? moodFor(current.events, new Date(), moodConfig);
+        const moodAtSale =
+          forcedMood ?? moodFor(current.events, new Date(), moodConfig, { ignoreSleep: true });
         return feedSale(current, sale, moodAtSale);
       });
       setNowTick(Date.now());
     },
-    [forcedMood, moodConfig],
+    [feeding, forcedMood, moodConfig],
   );
+
+  const startFeeding = useCallback(() => setFeeding(true), []);
+  const pauseFeeding = useCallback(() => setFeeding(false), []);
 
   const nameBeast = useCallback((name: string) => setState((c) => setBeastName(c, name)), []);
   const reset = useCallback(() => setState((c) => resetGame(c)), []);
 
   const value = useMemo(
-    () => ({ state, mood, moodConfig, feed, nameBeast, reset, forcedMood, setForcedMood }),
-    [state, mood, moodConfig, feed, nameBeast, reset, forcedMood],
+    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood }),
+    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

@@ -33,7 +33,7 @@ function baht(n: number): string {
 }
 
 export function TvScreen() {
-  const { state, mood, feed } = useGameStore();
+  const { state, mood, feed, feeding, startFeeding, pauseFeeding } = useGameStore();
   const stage = currentStage(state);
   const ratio = progressRatio(state.points, state.goalPoints);
   const next = nextStageInfo(state.points, state.goalPoints);
@@ -79,11 +79,32 @@ export function TvScreen() {
             </button>
           )}
         </div>
-        <div className={`tv__mood tv__mood--${mood}`}>
-          <span className="tv__mood-emoji">{moodInfo.emoji}</span>
-          <span>{moodInfo.text}</span>
+        <div className="tv__right">
+          <div className={`tv__mood tv__mood--${mood}`}>
+            <span className="tv__mood-emoji">{moodInfo.emoji}</span>
+            <span>{moodInfo.text}</span>
+          </div>
+          {feeding && (
+            <button type="button" className="tv__pause" onClick={pauseFeeding} title="พักเลี้ยง — หยุดรับยอด">
+              ⏸ พักเลี้ยง
+            </button>
+          )}
         </div>
       </header>
+
+      {/* ม่านพักเลี้ยง — จอเปิดใหม่/กดพัก: น้องหลับ ยอดไม่นับ จนกว่าจะกดเลี้ยงต่อ */}
+      {!feeding && (
+        <div className="tv__gate">
+          <div className="tv__gate-card">
+            <span className="tv__gate-zzz" aria-hidden>😴</span>
+            <h2 className="tv__gate-title">{hatched ? `น้อง${displayName} หลับอยู่` : "ไข่กำลังพักผ่อน"}</h2>
+            <p className="tv__gate-lead">ตอนนี้ยังไม่รับยอดนะ — กดปุ่มเพื่อปลุกน้องแล้วเริ่มนับยอดขาย</p>
+            <button type="button" className="tv__gate-btn" onClick={startFeeding}>
+              {state.points > 0 || hatched ? "🍖 เลี้ยงต่อ!" : "🥚 เริ่มเลี้ยง!"}
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="tv__stage-area">
         <Beast stage={stage} mood={mood} feedPulse={feedPulse} />

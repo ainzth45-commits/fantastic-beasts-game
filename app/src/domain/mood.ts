@@ -64,9 +64,14 @@ function sameDay(ms: number, now: Date): boolean {
   return dateKey(new Date(ms)) === dateKey(now);
 }
 
-export function moodFor(events: SaleEvent[], now: Date, cfg: MoodConfig): Mood {
-  // 1) นอกเวลางาน/วันหยุด = หลับ ชนะทุกอย่าง
-  if (!isWorkTime(now, cfg)) return "sleep";
+export interface MoodOptions {
+  /** เปิดเลี้ยงอยู่ = น้องตื่นเสมอ (วันหยุดมีคนมาทำงานกด "เลี้ยงต่อ" ก็เลี้ยงได้) */
+  ignoreSleep?: boolean;
+}
+
+export function moodFor(events: SaleEvent[], now: Date, cfg: MoodConfig, opts: MoodOptions = {}): Mood {
+  // 1) นอกเวลางาน/วันหยุด = หลับ ชนะทุกอย่าง — เว้นแต่เปิดเลี้ยงอยู่ (ignoreSleep)
+  if (!opts.ignoreSleep && !isWorkTime(now, cfg)) return "sleep";
 
   const nowMs = now.getTime();
   const valid = cleanEvents(events, nowMs);
