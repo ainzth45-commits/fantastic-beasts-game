@@ -25,3 +25,7 @@ dist-ssr
 
 # iCloud duplicate conflict copies
 * [23].*
+
+# source PNG ของงานศิลป์ (เสิร์ฟจริงเป็น webp) — เก็บบนดิสก์แต่ไม่ track
+app/public/assets/*.png
+!app/public/assets/concepts/
