@@ -165,8 +165,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick, feedStatus }),
-    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, todayTotal, nowTick, feedStatus],
+    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick, feedStatus, exportState, importState }),
+    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, todayTotal, nowTick, feedStatus, exportState, importState],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
