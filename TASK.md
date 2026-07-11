@@ -30,3 +30,19 @@
 
 ## บันทึกการอนุมัติแทน (auto-approve log)
 - 2026-07-11 12:35 — เลือก concept สัตว์: ใช้ทั้ง 3 ตัวจาก Codex เป็น 3 ระดับ · ง่าย=แกะยูนิคอร์น · กลาง=จิ้งจอกเมฆ · ยาก=มังกรชมพู (POC ทำแกะก่อน) — ไฟล์ concept อยู่ `app/public/assets/concepts/`
+
+## เฟส 2 — auto-approve log
+- 2026-07-11 ~15:30 — ปรับดีไซน์ร่าง "cracking" (ไข่เริ่มแตก): เดิมเจ้านายอยากให้มีขา/หาง/แขนโผล่ แต่ Codex วาดอวัยวะโผล่ไม่ชัด (ออกมาเป็นลูกกลม+รูดำ) 3 รอบ → เปลี่ยนเป็น "ไข่ร้าว + ปุยขนโผล่จากรอยแตกนิดเดียว" แทน (Codex ทำได้ดีกว่า ยังสื่อว่าเริ่มฟัก) — cracking เป็นร่างเปลี่ยนผ่านสั้น 5-12%
+
+## เฟส 2 — สถานะพัก (Codex ติด limit 2026-07-11 ~15:45)
+เสร็จ+commit แล้ว (art): egg, cracking, peeking, newborn, baby (+ child ของเดิม) = 6 ร่างมีศิลป์ครบ
+โค้ดเสร็จหมด 69 เทสผ่าน (domain 10 ร่าง, sprite fallback, labels, ฉากกลุ่ม, ตั้งชื่อ peeking, intro bg placeholder)
+
+### เหลือทำเมื่อ limit หาย (Codex):
+- [ ] junior (5 ภาพ) — บรีฟ: scratchpad/p2-r5.txt (พิมพ์ค้างในช่อง Codex แล้ว ยังไม่ส่ง)
+- [ ] teen (5) — p2-r6.txt (อ้าง junior-idle)
+- [ ] grown+adult (10) — p2-r7.txt (อ้าง teen-idle)
+- [ ] ฉาก 3 ภาพ nursery/valley/intro — p2-r8.txt (ยิงไปแล้วแต่ limit ก่อนเสร็จ ต้องยิงใหม่)
+### แล้วปิดงาน (Task 6-7):
+- [ ] เติม AVAILABLE ครบ 10 ร่าง + แปลงฉาก webp ลบ placeholder
+- [ ] verify + deploy + ไล่เทส 10 ร่างบนเว็บจริง + Codex review + LINE สรุป
