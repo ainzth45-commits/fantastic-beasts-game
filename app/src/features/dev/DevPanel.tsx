@@ -1,5 +1,5 @@
-// DevPanel — แผงเดโม POC: ยิงยอดปลอม / บังคับอารมณ์ / รีเซ็ต
-// เปิด-ปิดด้วยปุ่ม 🔧 มุมจอ (ของจริงเฟส 2 จะซ่อนหลัง query param)
+// DevPanel — แผงเดโม: ยิงยอดปลอม / บังคับอารมณ์ / สำรองแต้ม / รีเซ็ต
+// จอทีวีจริงต้องไม่มีปุ่มนี้ให้ทีมกดเล่น — โชว์เฉพาะ ?dev=1 (แอดมิน) หรือ ?mock=1 (เดโม)
 
 import { useState } from "react";
 import type { Mood, SaleEvent } from "../../domain/types";
@@ -28,9 +28,21 @@ const MOODS: Array<{ value: Mood; label: string }> = [
   { value: "sleep", label: "😴" },
 ];
 
+/** จอ production ซ่อนแผงทั้งแผง — เปิดด้วย ?dev=1 หรือ ?mock=1 เท่านั้น */
+function isDevVisible(): boolean {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    return q.get("dev") === "1" || q.get("mock") === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function DevPanel({ onMockSale }: { onMockSale: (sale: SaleEvent) => void }) {
   const { forcedMood, setForcedMood, reset, exportState, importState } = useGameStore();
   const [open, setOpen] = useState(false);
+
+  if (!isDevVisible()) return null;
 
   // สำรองแต้มเป็นไฟล์ JSON (กันหายถ้าล้าง cache/เปลี่ยนเครื่อง)
   function doExport() {
