@@ -1,12 +1,13 @@
 // จอ TV หลัก — สัตว์กลางจอ + หลอดโต + ticker + ป้ายยอดเข้า + ตั้งชื่อตอนฟัก
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SaleEvent } from "../../domain/types";
 import { currentStage, isHatched } from "../../state/gameState";
 import { useGameStore } from "../../state/useGameStore";
 import { Beast } from "../../ui/beast/Beast";
 import { Logo } from "../../ui/Logo";
 import { StageBackground } from "../../ui/StageBackground";
+import { isMuted, playSfx, setMuted, unlockAudio } from "../../sound/sound";
 import { DevPanel } from "../dev/DevPanel";
 import { CelebrationOverlay } from "./CelebrationOverlay";
 import { NamingOverlay } from "./NamingOverlay";
@@ -53,9 +54,38 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
     if (!latest || latest.at < mountedAt) return;
     setToast(latest);
     setFeedPulse((p) => p + 1);
+    playSfx(latest.amount >= 50_000 ? "bigding" : "ding");
     const t = window.setTimeout(() => setToast(null), 6000);
     return () => window.clearTimeout(t);
   }, [latest, mountedAt]);
+
+  // เสียงตามเหตุการณ์: เลื่อนร่าง = sparkle (เต็มวัย = fanfare) · อารมณ์ตกเป็นเศร้า/เหงา = aww เบาๆ
+  const prevStage = useRef(stage);
+  useEffect(() => {
+    if (prevStage.current !== stage) {
+      const goingUp = prevStage.current !== "adult";
+      prevStage.current = stage;
+      if (goingUp) playSfx(stage === "adult" ? "fanfare" : "sparkle");
+    }
+  }, [stage]);
+  const prevMood = useRef(mood);
+  useEffect(() => {
+    const was = prevMood.current;
+    prevMood.current = mood;
+    if ((mood === "sad" || mood === "lonely") && was !== "sad" && was !== "lonely" && was !== "sleep") playSfx("aww");
+  }, [mood]);
+
+  // ปุ่มเปิด/ปิดเสียง (จำค่าข้ามรีเฟรช)
+  const [soundOn, setSoundOn] = useState(() => !isMuted());
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    setMuted(!next);
+    if (next) {
+      unlockAudio();
+      playSfx("pop");
+    }
+  };
 
   // ตั้งชื่อ: เด้งเองครั้งแรกที่ฟัก + เปิดซ้ำได้จากปุ่ม
   const [namingOpen, setNamingOpen] = useState(false);
@@ -96,6 +126,9 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
             <span className="tv__mood-emoji">{moodInfo.emoji}</span>
             <span>{moodInfo.text}</span>
           </div>
+          <button type="button" className="tv__sound" onClick={toggleSound} title={soundOn ? "ปิดเสียง" : "เปิดเสียง"}>
+            {soundOn ? "🔊" : "🔇"}
+          </button>
           {feeding && (
             <button type="button" className="tv__pause" onClick={pauseFeeding} title="พักเลี้ยง — หยุดรับยอด">
               ⏸ พักเลี้ยง
@@ -111,7 +144,15 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
             <span className="tv__gate-zzz" aria-hidden>😴</span>
             <h2 className="tv__gate-title">{hatched ? `น้อง${displayName} หลับอยู่` : "ไข่กำลังพักผ่อน"}</h2>
             <p className="tv__gate-lead">ตอนนี้ยังไม่รับยอดนะ — กดปุ่มเพื่อปลุกน้องแล้วเริ่มนับยอดขาย</p>
-            <button type="button" className="tv__gate-btn" onClick={startFeeding}>
+            <button
+              type="button"
+              className="tv__gate-btn"
+              onClick={() => {
+                unlockAudio(); // gesture แรกของจอ — ปลดล็อกเสียงตาม autoplay policy
+                playSfx("pop");
+                startFeeding();
+              }}
+            >
               {state.points > 0 || hatched ? "🍖 เลี้ยงต่อ!" : "🥚 เริ่มเลี้ยง!"}
             </button>
           </div>
