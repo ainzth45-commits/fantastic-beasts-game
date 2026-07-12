@@ -119,7 +119,7 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
       )}
 
       <main className="tv__stage-area">
-        <Beast stage={stage} mood={mood} feedPulse={feedPulse} />
+        <Beast tier={state.tier} stage={stage} mood={mood} feedPulse={feedPulse} />
         {toast && (
           <div className="tv__toast" key={toast.id}>
             {toast.employeePhotoUrl ? (

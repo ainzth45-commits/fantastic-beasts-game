@@ -4,11 +4,12 @@
 // + เด้งรับอาหารตอนยอดเข้า (ทริกเกอร์จาก key)
 
 import { useEffect, useRef, useState } from "react";
-import type { Mood, Stage } from "../../domain/types";
+import type { BeastTier, Mood, Stage } from "../../domain/types";
 import { beastSprite } from "./sprites";
 import "./beast.css";
 
 interface BeastProps {
+  tier: BeastTier;
   stage: Stage;
   mood: Mood;
   /** เปลี่ยนค่าทุกครั้งที่ยอดเข้า → เล่นท่ารับอาหาร 1 ครั้ง */
@@ -20,7 +21,7 @@ function randomBetween(min: number, max: number): number {
   return min + Math.random() * (max - min);
 }
 
-export function Beast({ stage, mood, feedPulse }: BeastProps) {
+export function Beast({ tier, stage, mood, feedPulse }: BeastProps) {
   const [blinking, setBlinking] = useState(false);
   const [quirk, setQuirk] = useState<"none" | "wiggle" | "tilt" | "hop">("none");
   const [eating, setEating] = useState(false);
@@ -95,7 +96,7 @@ export function Beast({ stage, mood, feedPulse }: BeastProps) {
     return () => window.clearTimeout(t);
   }, [feedPulse]);
 
-  const sprite = beastSprite(stage, mood, blinking);
+  const sprite = beastSprite(tier, stage, mood, blinking);
   const classes = [
     "beast",
     `beast--${mood}`,

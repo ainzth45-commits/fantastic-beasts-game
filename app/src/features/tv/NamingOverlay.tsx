@@ -10,7 +10,7 @@ export function NamingOverlay({ onClose }: { onClose: () => void }) {
   const [draft, setDraft] = useState(state.beastName ?? "");
   const canSave = draft.trim().length > 0;
   // โชว์รูปน้องร่างปัจจุบัน (ตอนฟัก = peeking) ตัวใหญ่ๆ ให้ทีมเห็นชัดว่ากำลังตั้งชื่อให้ใคร
-  const sprite = beastSprite(currentStage(state), "happy", false);
+  const sprite = beastSprite(state.tier, currentStage(state), "happy", false);
 
   function save() {
     if (!canSave) return;
