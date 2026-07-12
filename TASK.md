@@ -66,3 +66,32 @@
 ## สถานะปิดวัน 2026-07-11
 เฟส 1 ✅ · เฟส 2 = 80% (⏸รอ Codex limit — เหลือ junior/teen/grown/adult) · เฟส 3 ✅ (ยอดจริง end-to-end) · เฟส 4A พร้อมเริ่ม (โค้ดล้วน)
 เปิด session ใหม่: อ่าน master-roadmap.md + TASK.md นี้ · Codex หายลิมิต → ยิงบรีฟจาก docs/art-briefs/phase2-remaining-unisheep.md ตามลำดับ
+
+## เฟส 2 — ปิดสมบูรณ์ (2026-07-12 เช้า) ✅
+Codex หายลิมิต → ไล่ 3 รอบสุดท้ายจบในเช้าเดียว:
+- [x] junior 5 ภาพ (รอบ 5 — บรีฟค้างในช่องจากรอบก่อน Codex รันเองต่อจนจบ) → ตรวจตาผ่าน → webp → push 3f14967
+- [x] teen 5 ภาพ (รอบ 6) — แก้ 1 รอบ: ภาพแรกไม่มีปุยเมฆรองเหมือนร่างอื่น สั่งเติมเมฆแบบชี้ชัด (ห้ามแตะอย่างอื่น) ✅ → push cddec50
+- [x] grown+adult 10 ภาพ (รอบ 7) — ผ่านรอบเดียว adult มีออร่ารุ้งสวยตามบรีฟ → push 944fe4e
+- [x] AVAILABLE ครบ 10 ร่าง · เทส 76/76 ผ่าน · curl เช็ค webp ใหม่ทั้ง 20 ไฟล์บน Pages = 200 หมด
+- [x] เทสเต็มระบบบนเว็บจริง (?mock=1): ไล่ egg→cracking→peeking(ตั้งชื่อเด้ง)→newborn→baby→child→teen→grown→adult ครบ ฉากเปลี่ยนถูกทุกกลุ่ม (egg→nursery→ทุ่งเห็ด→หุบเขาลอยฟ้า→ปราสาทฟ้า) — junior label ข้ามไปเพราะ mood ×1.5 เร่งแต้มระหว่างคลิก แต่ sprite junior ยืนยันจาก contact sheet + เทสหน่วย + ไฟล์ live แล้ว
+- [x] Codex code review: ไม่มี blocker · แก้ MEDIUM แล้ว (เทส map-to-disk 77/77 ผ่าน, push bd00900) · LOW 2 ข้อจดไว้ (fallback regression + STAGE_FALLBACK drift)
+- หมายเหตุ: กติกาใหม่จากเจ้านาย — Codex/Claude ติดหรือใกล้ limit ให้แจ้ง LINE ทันที (บันทึกใน memory line-notify-on-limit แล้ว)
+
+## เฟส 4A — เสร็จ (2026-07-12 สาย) ✅
+- [x] startedCycle ตั้งจากยอดแรก · syncCarryOver อัตโนมัติตามนาฬิกา (ข้ามเดือน+ยังไม่เต็มวัย → ×0.75) · เต็มวัยแล้วไม่นับ carryOver
+- [x] ฉากฉลองโตเต็มวัย: confetti CSS + ชื่อน้อง + รางวัล (config REWARDS) + ทีเซอร์ตัวถัดไป + ปุ่มแอดมิน "รับรางวัล & เริ่มตัวถัดไป" + ปุ่มฉลองต่อ (พับเก็บ/เปิดใหม่จากป้าย 🎉)
+- [x] finishCycle → history (หอเกียรติยศ) + เริ่ม tier ถัดไป · resetGame ไม่ล้าง history · sanitize ครบ
+- [x] เทสวงจร 10 เคส + เทสจริงบน dev: เลี้ยงจบ→ฉลอง→รับรางวัล→ไข่ตัวใหม่ ✅ (push 2e41d02)
+- auto-approve (5 นาที ไม่มีคำตอบ): ① ลำดับตัวล็อก easy→medium→hard (ตรงกติกา "เริ่มจากง่าย") ไม่ทำหน้าจอเลือกอิสระ — ใช้ทีเซอร์ในฉากฉลองแทน ② ครบ 3 ตัว → วนกลับ easy ③ ข้อความรางวัล = placeholder "รางวัลพิเศษจากหัวหน้า 🎁" ④ เป้า medium/hard ใช้ DEFAULT_GOALS 2.4M/3.0M — ทั้งหมดเปลี่ยนทีหลังได้ใน app/src/state/config.ts
+
+## เฟส 4B — เริ่มแล้ว (ศิลป์จิ้งจอกเมฆ + โค้ด tier)
+- [x] F1 ไข่จิ้งจอกเมฆ 6 ภาพ ✅ ตรวจตาผ่าน (โทนฟ้าน้ำแข็ง ต่างจากไข่แกะชัด) push 682ede9
+- [x] โค้ด tier: beastSprite(tier,...) แยกโฟลเดอร์ beast-easy/medium/hard · fallback ในสายพันธุ์เดียวเท่านั้น · สายพันธุ์ไม่มีศิลป์ → placeholder ไข่แกะ (auto-approve กันจอพัง) · ฉากใช้ร่วม 3 สายพันธุ์ไปก่อน (ตาม roadmap ข้อแนะนำ ก) push 27a8300
+- [ ] F2 peeking (Codex กำลังทำ) → F3-F8 ตามโซ่ → มังกร D1-D8
+
+## เฟส 5 + เฟส 6 บางส่วน (2026-07-12 บ่าย — ช่วง Codex ติดลิมิต)
+- [x] เฟส 5 ระบบเสียง: `app/src/sound/sound.ts` WebAudio สังเคราะห์ (auto-approve ทาง ข — ไม่ต้องโหลดไฟล์/ขออนุมัติ สลับเป็น CC0 ทีหลังได้โดย API เดิม) · SFX: ยอดเข้า ding / ยอดใหญ่≥50k bigding / เลื่อนร่าง sparkle / เต็มวัย fanfare / เศร้า-เหงา aww / ปุ่ม pop · ปุ่ม 🔊/🔇 จำค่า · ปลดล็อกที่ปุ่มเริ่มเลี้ยง (ผ่าน autoplay policy) · ไม่มี BGM (ตาม default) · เทส 86/86 + เช็ค console บน dev สะอาด — push 68db9dc
+- [ ] ⚠️ รอเจ้านายฟังเสียงจริงบนจอ/ลำโพงจริง — ฟรายเดย์ฟังไม่ได้ ถ้าไม่ถูกใจเปลี่ยนเป็นไฟล์ CC0 ได้ (ต้องดาวน์โหลด = ขออนุมัติ)
+- [x] เฟส 6 ข้อย่อย: ซ่อน DevPanel ใน production — โชว์เฉพาะ ?dev=1 / ?mock=1 (push d3e7acc)
+- [x] เทสจริงบน dev: จอ medium โชว์ไข่จิ้งจอกเมฆถูกต้อง (tier pipeline ครบวงจร)
+- Codex: F5 child มาครบก่อนลิมิตตัด → เข้าเกมแล้ว · จิ้งจอกเมฆคืบ 26/46 ภาพ · feedback เก็บที่ docs/art-briefs/codex-feedback-2026-07-12.md · ลิมิตรีเซ็ต 14:04 (มี watcher ปลุก) → ต่อ F6→F7→F8 → มังกร + ตามผลรีวิว #2
