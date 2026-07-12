@@ -39,7 +39,9 @@ export const DEFAULT_MOOD_CONFIG: MoodConfig = {
   lonelyAfterMinutes: 120,
   sadCheckHour: 14,
   sadBelowRatio: 0.5,
-  dailyAverageAmount: 100_000, // ~2.2 ล้าน/เดือน ÷ ~22 วันทำงาน
+  // ยืนยันจากยอดจริงทีมหนามแดง 3 เดือน (คำนวณ 2026-07-12): เฉลี่ย/วันทำงาน 91,379฿ ·
+  // มิ.ย. (เดือนเต็มล่าสุด) 101,749฿ · เทรนด์ขาขึ้น เม.ย.1.42M → พ.ค.2.13M → มิ.ย.2.59M
+  dailyAverageAmount: 100_000,
 };
 
 function dateKey(d: Date): string {
