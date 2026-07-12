@@ -30,3 +30,5 @@ dist-ssr
 public/assets/*.png
 !public/assets/concepts/
 public/assets/beast-easy/*.png
+public/assets/beast-medium/*.png
+public/assets/beast-hard/*.png
