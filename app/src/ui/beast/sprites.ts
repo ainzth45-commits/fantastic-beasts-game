@@ -58,6 +58,7 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
   medium: {
     egg: { idle: "egg-idle", happy: "egg-happy", sleep: "egg-sleep" },
     cracking: { idle: "cracking-idle", happy: "cracking-happy", sleep: "cracking-sleep" },
+    peeking: fullStage("peeking"),
   },
   // มังกรชมพู — ยังไม่มีศิลป์ (รอคิว Codex)
   hard: {},
