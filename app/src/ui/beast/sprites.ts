@@ -30,6 +30,7 @@ const AVAILABLE: Partial<Record<Stage, Partial<Record<Pose, string>>>> = {
   baby: { idle: "baby-idle", blink: "baby-blink", happy: "baby-happy", sad: "baby-sad", sleep: "baby-sleep" },
   child: { idle: "child-idle", blink: "child-blink", happy: "child-happy", sad: "child-sad", sleep: "child-sleep" },
   junior: { idle: "junior-idle", blink: "junior-blink", happy: "junior-happy", sad: "junior-sad", sleep: "junior-sleep" },
+  teen: { idle: "teen-idle", blink: "teen-blink", happy: "teen-happy", sad: "teen-sad", sleep: "teen-sleep" },
 };
 
 /** ถอยร่างลงทีละขั้นเมื่อร่างปัจจุบันยังไม่มีภาพ (egg = ก้นสุด) */
