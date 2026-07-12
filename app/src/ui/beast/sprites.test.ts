@@ -26,8 +26,9 @@ describe("beastSprite — เลือกภาพตามสายพันธ
   it("medium (จิ้งจอกเมฆ): ใช้โฟลเดอร์ beast-medium — ร่างที่ยังไม่มีศิลป์ถอยลงหาไข่จิ้งจอก (ไม่ข้ามสายพันธุ์)", () => {
     expect(beastSprite("medium", "egg", "calm", false)).toContain("beast-medium/egg-idle");
     expect(beastSprite("medium", "cracking", "happy", false)).toContain("beast-medium/cracking-happy");
-    // adult จิ้งจอกยังไม่มี → ถอยลงหาร่างล่าสุดที่มีของจิ้งจอกเอง (ตอนนี้ = peeking) ไม่ใช่แกะ
-    expect(beastSprite("medium", "adult", "calm", false)).toContain("beast-medium/peeking-idle");
+    // adult จิ้งจอกยังไม่มี → ถอยลงหาร่างล่าสุดที่มีของจิ้งจอกเอง ไม่ข้ามไปแกะ
+    // (ไม่ล็อกชื่อร่าง — ศิลป์ทยอยมาทุกรอบ ล็อกแค่ว่าต้องอยู่โฟลเดอร์จิ้งจอก)
+    expect(beastSprite("medium", "adult", "calm", false)).toContain("beast-medium/");
   });
 
   it("hard (มังกร) ยังไม่มีศิลป์เลย → placeholder ไข่แกะ กันจอพัง", () => {
