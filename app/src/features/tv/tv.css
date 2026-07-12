@@ -335,3 +335,26 @@
 }
 .tv__logo-btn:hover { scale: 1.04; }
 .tv__logo-btn:active { scale: 0.97; }
+
+/* ป้ายกลับเข้าฉากฉลอง (โผล่เมื่อพับฉลองเก็บไว้) */
+.tv__celebrate-badge {
+  position: fixed;
+  right: clamp(16px, 3vw, 40px);
+  bottom: clamp(70px, 12dvh, 120px);
+  z-index: 55;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  font-family: inherit;
+  font-size: clamp(15px, 2.4dvh, 21px);
+  font-weight: 700;
+  background: linear-gradient(180deg, #ffd45e, #f5a623);
+  color: #3a2c00;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(245, 166, 35, 0.5);
+  animation: hint-pulse-badge 2s ease-in-out infinite;
+}
+@keyframes hint-pulse-badge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}

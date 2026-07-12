@@ -8,9 +8,12 @@ import {
   applySaleDelete,
   applySaleUpdate,
   feedSale,
+  finishCycle,
+  isComplete,
   resetGame,
   sanitizeGameState,
   setBeastName,
+  syncCarryOver,
   todayTotal as todayTotalOf,
   type GameState,
 } from "./gameState";
@@ -39,6 +42,10 @@ interface StoreValue {
   feed: (sale: SaleEvent) => void;
   nameBeast: (name: string) => void;
   reset: () => void;
+  /** โตเต็มวัยครบเป้าแล้ว — เปิดฉากฉลอง */
+  complete: boolean;
+  /** ปิดรอบ: บันทึกหอเกียรติยศ + เริ่มตัวถัดไป (ปุ่มแอดมินในฉากฉลอง) */
+  completeCycle: () => void;
   /** สำรอง/กู้คืนแต้มทั้งหมด (JSON) — กันแต้มหายถ้าเครื่อง/เบราว์เซอร์มีปัญหา */
   exportState: () => string;
   importState: (json: string) => boolean;
@@ -77,6 +84,11 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     saveJson(STORAGE_KEY, state);
   }, [state]);
+
+  // ธงข้ามเดือน (โตช้า ×0.75) sync ตามนาฬิกา — ครอบคลุมทั้งเปิดจอใหม่และจอเปิดค้างข้ามเดือน
+  useEffect(() => {
+    setState((c) => syncCarryOver(c, nowTick));
+  }, [nowTick]);
 
   // ยอดวันนี้จาก aggregate — ผูกกับ nowTick ให้ข้ามเที่ยงคืนแล้วรีเซ็ตเอง (จอเปิดค้างคืน)
   const todayTotal = useMemo(() => todayTotalOf(state, nowTick), [state, nowTick]);
@@ -151,6 +163,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
 
   const nameBeast = useCallback((name: string) => setState((c) => setBeastName(c, name)), []);
   const reset = useCallback(() => setState((c) => resetGame(c)), []);
+  const complete = isComplete(state);
+  const completeCycle = useCallback(() => setState((c) => finishCycle(c, Date.now())), []);
 
   const exportState = useCallback(() => JSON.stringify(state, null, 2), [state]);
   const importState = useCallback((json: string): boolean => {
@@ -165,8 +179,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, setForcedMood, todayTotal, nowMs: nowTick, feedStatus, exportState, importState }),
-    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, forcedMood, todayTotal, nowTick, feedStatus, exportState, importState],
+    () => ({ state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, complete, completeCycle, forcedMood, setForcedMood, todayTotal, nowMs: nowTick, feedStatus, exportState, importState }),
+    [state, mood, moodConfig, feeding, startFeeding, pauseFeeding, feed, nameBeast, reset, complete, completeCycle, forcedMood, todayTotal, nowTick, feedStatus, exportState, importState],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

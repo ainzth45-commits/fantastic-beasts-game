@@ -8,6 +8,7 @@ import { Beast } from "../../ui/beast/Beast";
 import { Logo } from "../../ui/Logo";
 import { StageBackground } from "../../ui/StageBackground";
 import { DevPanel } from "../dev/DevPanel";
+import { CelebrationOverlay } from "./CelebrationOverlay";
 import { NamingOverlay } from "./NamingOverlay";
 import "./tv.css";
 
@@ -38,7 +39,7 @@ function baht(n: number): string {
 }
 
 export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
-  const { state, mood, feed, feeding, startFeeding, pauseFeeding, todayTotal, feedStatus } = useGameStore();
+  const { state, mood, feed, feeding, startFeeding, pauseFeeding, todayTotal, feedStatus, complete } = useGameStore();
   const stage = currentStage(state);
   const hatched = isHatched(state);
 
@@ -61,6 +62,12 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
   useEffect(() => {
     if (hatched && state.beastName === null) setNamingOpen(true);
   }, [hatched, state.beastName]);
+
+  // ฉากฉลองโตเต็มวัย: เด้งเองตอนครบเป้า · "ฉลองต่อ" พับเก็บได้ แล้วเปิดใหม่จากป้าย 🎉
+  const [celebrationHidden, setCelebrationHidden] = useState(false);
+  useEffect(() => {
+    if (!complete) setCelebrationHidden(false); // เริ่มตัวใหม่แล้ว รีเซ็ตธง
+  }, [complete]);
 
   const displayName = state.beastName ?? "???";
   const moodInfo = MOOD_LABEL[mood];
@@ -152,6 +159,12 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
         </div>
       </footer>
 
+      {complete && !celebrationHidden && <CelebrationOverlay onKeepWatching={() => setCelebrationHidden(true)} />}
+      {complete && celebrationHidden && (
+        <button type="button" className="tv__celebrate-badge" onClick={() => setCelebrationHidden(false)}>
+          🎉 รับรางวัล
+        </button>
+      )}
       {namingOpen && <NamingOverlay onClose={() => setNamingOpen(false)} />}
       <DevPanel onMockSale={feed} />
     </div>
