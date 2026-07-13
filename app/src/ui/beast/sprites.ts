@@ -74,6 +74,7 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     peeking: fullStage("peeking"),
     newborn: fullStage("newborn"),
     baby: fullStage("baby"),
+    child: fullStage("child"),
   },
 };
 
