@@ -67,8 +67,11 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     grown: fullStage("grown"),
     adult: fullStage("adult"),
   },
-  // มังกรชมพู — ยังไม่มีศิลป์ (รอคิว Codex)
-  hard: {},
+  // มังกรชมพู — ศิลป์กำลังทยอยมา (เฟส 4B)
+  hard: {
+    egg: { idle: "egg-idle", happy: "egg-happy", sleep: "egg-sleep" },
+    cracking: { idle: "cracking-idle", happy: "cracking-happy", sleep: "cracking-sleep" },
+  },
 };
 
 /** ถอยร่างลงทีละขั้นเมื่อร่างปัจจุบันยังไม่มีภาพ (egg = ก้นสุด) */

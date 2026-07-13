@@ -31,9 +31,9 @@ describe("beastSprite — เลือกภาพตามสายพันธ
     expect(beastSprite("medium", "adult", "calm", false)).toContain("beast-medium/");
   });
 
-  it("hard (มังกร) ยังไม่มีศิลป์เลย → placeholder ไข่แกะ กันจอพัง", () => {
-    expect(beastSprite("hard", "egg", "calm", false)).toContain("beast-easy/egg-idle");
-    expect(beastSprite("hard", "adult", "happy", false)).toContain("beast-easy/egg-idle");
+  it("hard (มังกร): ใช้โฟลเดอร์ beast-hard — ร่างที่ยังไม่มีศิลป์ถอยลงในสายพันธุ์เอง", () => {
+    expect(beastSprite("hard", "egg", "calm", false)).toContain("beast-hard/egg-idle");
+    expect(beastSprite("hard", "adult", "happy", false)).toContain("beast-hard/");
   });
 
   // กัน AVAILABLE พิมพ์ชื่อผิด/ไฟล์หาย: ทุกสายพันธุ์×ร่าง×อารมณ์ ต้อง resolve ไปไฟล์ .webp ที่มีจริงบนดิสก์
