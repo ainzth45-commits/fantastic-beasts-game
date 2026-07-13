@@ -34,7 +34,8 @@ export interface FeedCallbacks {
 }
 
 let client: SupabaseClient | null = null;
-function getClient(): SupabaseClient {
+/** client เดียวใช้ร่วมทุก data module (salesFeed + holidays) */
+export function getClient(): SupabaseClient {
   if (!client) client = createClient(SUPABASE_URL, SUPABASE_KEY);
   return client;
 }

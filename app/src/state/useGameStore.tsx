@@ -1,6 +1,7 @@
 // store กลาง — React context บางๆ ครอบ pure state + persist localStorage
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { fetchHolidays } from "../data/holidays";
 import { startSalesFeed, type SalesFeed } from "../data/salesFeed";
 import { DEFAULT_MOOD_CONFIG, moodFor, type MoodConfig } from "../domain/mood";
 import type { Mood, SaleEvent } from "../domain/types";
@@ -73,7 +74,18 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
   const [nowTick, setNowTick] = useState(() => Date.now());
   // เปิดจอใหม่ = พักเสมอ (ทีวีไม่ได้เปิดตลอด ต้องกดเริ่มเลี้ยง/เลี้ยงต่อก่อนถึงนับยอด)
   const [feeding, setFeeding] = useState(false);
-  const moodConfig = DEFAULT_MOOD_CONFIG;
+
+  // วันหยุดบริษัทจาก Supabase — โหลดครั้งเดียวตอนเปิดจอ (mock ไม่ยิง network · พลาด = [] เกมเดินต่อ)
+  const [holidays, setHolidays] = useState<string[]>([]);
+  useEffect(() => {
+    if (isMockMode()) return;
+    let cancelled = false;
+    fetchHolidays().then((hs) => !cancelled && setHolidays(hs));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const moodConfig = useMemo(() => ({ ...DEFAULT_MOOD_CONFIG, holidays }), [holidays]);
 
   // นาฬิกาเดินทุก 30 วิ — อารมณ์เปลี่ยนตามเวลาได้เอง (เหงา/หลับ) โดยไม่ต้องมี event ใหม่
   useEffect(() => {
