@@ -93,8 +93,8 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
 
   return (
     <div className="tv">
-      {/* ฉากเปลี่ยนตามขั้นการเติบโต (Codex) + crossfade */}
-      <StageBackground stage={stage} />
+      {/* ฉากเปลี่ยนตามสายพันธุ์+ขั้นการเติบโต (Codex) + crossfade */}
+      <StageBackground tier={state.tier} stage={stage} />
       <header className="tv__top">
         {/* กด logo = กลับหน้าแรก (พักเลี้ยงอัตโนมัติ) */}
         <button type="button" className="tv__logo-btn" onClick={onLogoClick} title="กลับหน้าแรก (พักเลี้ยง)">
