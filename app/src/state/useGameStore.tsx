@@ -7,7 +7,7 @@ import type { Mood, SaleEvent } from "../domain/types";
 import {
   applySaleDelete,
   applySaleUpdate,
-  feedSale,
+  feedSaleSynced,
   finishCycle,
   isComplete,
   resetGame,
@@ -113,7 +113,8 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
             ignoreSleep: true,
             todayTotal: todayTotalOf(current, Date.now()),
           });
-        return feedSale(current, sale, moodAtSale);
+        // sync ธงข้ามเดือนจากเวลาของยอดเอง — ไม่รอ timer 30 วิ (review #2 HIGH)
+        return feedSaleSynced(current, sale, moodAtSale);
       });
       setNowTick(Date.now());
     },
@@ -138,7 +139,7 @@ export function GameStoreProvider({ children }: { children: ReactNode }) {
             ignoreSleep: true,
             todayTotal: todayTotalOf(current, Date.now()),
           });
-          return feedSale(current, sale, moodAtSale);
+          return feedSaleSynced(current, sale, moodAtSale);
         });
         setNowTick(Date.now());
       },

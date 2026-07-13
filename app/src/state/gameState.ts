@@ -177,11 +177,23 @@ export function isComplete(state: GameState): boolean {
 /**
  * sync ธง carryOver ตามนาฬิกา: เริ่มเลี้ยงเดือนก่อนแต่ยังไม่เต็มวัย → โตช้าลง ×0.75
  * เรียกซ้ำได้ปลอดภัย (idempotent) — คืน state เดิมถ้าไม่มีอะไรเปลี่ยน
+ * monotonic: เปิดแล้วไม่ปิดจนจบรอบ/รีเซ็ต — นาฬิกาเครื่องย้อน/ยอดแก้ย้อนหลังห้ามพลิกธงกลับ (review #2)
  */
 export function syncCarryOver(state: GameState, nowMs: number): GameState {
-  const should = state.startedCycle !== null && monthKey(nowMs) > state.startedCycle && !isComplete(state);
+  const should =
+    state.carryOver ||
+    (state.startedCycle !== null && monthKey(nowMs) > state.startedCycle && !isComplete(state));
   if (state.carryOver === should) return state;
   return { ...state, carryOver: should };
+}
+
+/**
+ * ป้อนยอดแบบ sync ธงข้ามเดือนจากเวลาของยอดเองก่อนคิดแต้ม —
+ * ปิดช่องยอดแรกหลังข้ามเดือนรอด ×0.75 เพราะ store sync ตาม timer 30 วิ (review #2 HIGH)
+ * ทุก ingestion path (mock/Supabase) ต้องใช้ตัวนี้แทน feedSale ตรงๆ
+ */
+export function feedSaleSynced(state: GameState, sale: SaleEvent, mood: Mood): GameState {
+  return feedSale(syncCarryOver(state, sale.at), sale, mood);
 }
 
 /**
@@ -257,7 +269,8 @@ export function sanitizeGameState(raw: unknown): GameState {
     dailyTotals,
     counted,
     startedCycle:
-      typeof r.startedCycle === "string" && /^\d{4}-\d{2}$/.test(r.startedCycle) ? r.startedCycle : null,
+      // เดือนต้อง 01-12 จริง — shape ถูกแต่เดือนเป็นไปไม่ได้ (2026-00/13/99) จะทำ lexical compare เพี้ยนเงียบๆ (review #2)
+      typeof r.startedCycle === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(r.startedCycle) ? r.startedCycle : null,
     history: Array.isArray(r.history)
       ? (r.history as unknown[]).filter((h): h is FinishedBeast => {
           if (!h || typeof h !== "object") return false;
