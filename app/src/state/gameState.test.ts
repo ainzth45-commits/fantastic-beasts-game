@@ -20,9 +20,9 @@ function sale(amount: number, at = 1_000_000): SaleEvent {
 }
 
 describe("gameState actions", () => {
-  it("เริ่มต้น: ไข่ easy เป้า 1.8 ล้าน ยังไม่ตั้งชื่อ", () => {
+  it("เริ่มต้น: ไข่ easy เป้า 1.5 ล้าน ยังไม่ตั้งชื่อ", () => {
     const s = initialState();
-    expect(s.goalPoints).toBe(1_800_000);
+    expect(s.goalPoints).toBe(1_500_000);
     expect(currentStage(s)).toBe("egg");
     expect(isHatched(s)).toBe(false);
     expect(s.beastName).toBeNull();
@@ -44,11 +44,11 @@ describe("gameState actions", () => {
   it("ตั้งชื่อได้ตอนโผล่พ้นไข่ (peeking 12%) ไม่ใช่ก่อนหน้า", () => {
     let s = initialState();
     // 5% = ไข่เริ่มแตก (cracking) — ยังตั้งชื่อไม่ได้
-    s = feedSale(s, sale(1_800_000 * 0.06), "calm");
+    s = feedSale(s, sale(1_500_000 * 0.06), "calm");
     expect(currentStage(s)).toBe("cracking");
     expect(isHatched(s)).toBe(false);
     // 12% = โผล่พ้นไข่ (peeking) — ตั้งชื่อได้
-    s = feedSale(s, sale(1_800_000 * 0.07), "calm");
+    s = feedSale(s, sale(1_500_000 * 0.07), "calm");
     expect(currentStage(s)).toBe("peeking");
     expect(isHatched(s)).toBe(true);
   });

@@ -60,9 +60,12 @@ export const STAGE_THRESHOLDS: Array<{ stage: Stage; atRatio: number }> = [
   { stage: "adult", atRatio: 1.0 },
 ];
 
-/** เป้า default ต่อระดับ (บาทแต้มโต) — ปรับได้ */
+/**
+ * เป้า default ต่อระดับ (บาทแต้มโต) — เจ้านายเคาะ 2026-07-13:
+ * ลดจากชุดแรก (1.8/2.4/3.0) · ยาก = ยอดสูงสุดที่ทีมเคยทำได้ (มิ.ย. 2026 ≈ 2.59M ปัดเป็น 2.6M)
+ */
 export const DEFAULT_GOALS: Record<BeastTier, number> = {
-  easy: 1_800_000,
-  medium: 2_400_000,
-  hard: 3_000_000,
+  easy: 1_500_000,
+  medium: 2_000_000,
+  hard: 2_600_000,
 };

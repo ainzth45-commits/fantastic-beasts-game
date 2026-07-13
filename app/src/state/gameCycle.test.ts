@@ -69,7 +69,7 @@ describe("วงจรรอบเกม", () => {
     expect(s.points).toBe(0);
     expect(s.beastName).toBeNull();
     expect(s.startedCycle).toBeNull();
-    expect(s.goalPoints).toBe(2_400_000);
+    expect(s.goalPoints).toBe(2_000_000);
   });
 
   it("finishCycle: ยังไม่เต็มวัย → ไม่ทำอะไร (กันกดพลาด)", () => {
