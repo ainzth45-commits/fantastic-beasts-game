@@ -67,7 +67,7 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     grown: fullStage("grown"),
     adult: fullStage("adult"),
   },
-  // มังกรชมพู — ศิลป์กำลังทยอยมา (เฟส 4B)
+  // มังกรชมพู — ครบทั้ง 10 ร่าง (เฟส 4B จบครบ 3 สายพันธุ์)
   hard: {
     egg: { idle: "egg-idle", happy: "egg-happy", sleep: "egg-sleep" },
     cracking: { idle: "cracking-idle", happy: "cracking-happy", sleep: "cracking-sleep" },
@@ -77,6 +77,8 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     child: fullStage("child"),
     junior: fullStage("junior"),
     teen: fullStage("teen"),
+    grown: fullStage("grown"),
+    adult: fullStage("adult"),
   },
 };
 
