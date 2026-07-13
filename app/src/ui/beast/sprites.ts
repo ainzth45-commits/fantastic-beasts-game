@@ -54,7 +54,7 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     grown: fullStage("grown"),
     adult: fullStage("adult"),
   },
-  // จิ้งจอกเมฆ — ศิลป์กำลังทยอยมา (เฟส 4B)
+  // จิ้งจอกเมฆ — ครบทั้ง 10 ร่าง (เฟส 4B จบฝั่ง medium)
   medium: {
     egg: { idle: "egg-idle", happy: "egg-happy", sleep: "egg-sleep" },
     cracking: { idle: "cracking-idle", happy: "cracking-happy", sleep: "cracking-sleep" },
@@ -64,6 +64,8 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     child: fullStage("child"),
     junior: fullStage("junior"),
     teen: fullStage("teen"),
+    grown: fullStage("grown"),
+    adult: fullStage("adult"),
   },
   // มังกรชมพู — ยังไม่มีศิลป์ (รอคิว Codex)
   hard: {},
