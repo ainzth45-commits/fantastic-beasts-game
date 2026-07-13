@@ -1,7 +1,8 @@
-// ฉากฉลองโตเต็มวัย (เฟส 4A) — confetti CSS + รางวัล + ปุ่มเริ่มตัวถัดไป (แอดมินกด)
+// ฉากฉลองโตเต็มวัย (เฟส 4A) — confetti CSS + ร่างเต็มวัย + รางวัล + ปุ่มเริ่มตัวถัดไป (แอดมินกด)
 
 import { NEXT_TIER, REWARDS, TIER_LABEL } from "../../state/config";
 import { useGameStore } from "../../state/useGameStore";
+import { beastSprite } from "../../ui/beast/sprites";
 import "./celebration.css";
 
 const CONFETTI_COLORS = ["#ffd45e", "#7ec8ff", "#ff9edb", "#a5f0c5", "#cdb9ff", "#ffb37e"];
@@ -29,6 +30,8 @@ export function CelebrationOverlay({ onKeepWatching }: { onKeepWatching: () => v
       </div>
       <div className="celebrate__card">
         <div className="celebrate__burst" aria-hidden>🎉</div>
+        {/* โชว์ร่างเต็มวัยให้เห็นเต็มๆ ตอนทำสำเร็จ (เจ้านายสั่ง 2026-07-13) */}
+        <img className="celebrate__beast" src={beastSprite(state.tier, "adult", "happy", false)} alt={`น้อง${name} ร่างเต็มวัย`} />
         <h1 className="celebrate__title">น้อง{name} โตเต็มวัยแล้ว!</h1>
         <p className="celebrate__lead">ทีมเลี้ยงจนครบเป้า — เก่งมากทุกคน 👏</p>
         <div className="celebrate__reward">

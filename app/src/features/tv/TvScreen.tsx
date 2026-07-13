@@ -22,19 +22,6 @@ const MOOD_LABEL: Record<string, { emoji: string; text: string }> = {
   sleep: { emoji: "😴", text: "หลับอยู่" },
 };
 
-const STAGE_LABEL: Record<string, string> = {
-  egg: "ไข่ปริศนา",
-  cracking: "ไข่เริ่มแตก",
-  peeking: "โผล่พ้นไข่",
-  newborn: "แรกเกิด",
-  baby: "วัยทารก",
-  child: "วัยเด็ก",
-  junior: "เด็กโต",
-  teen: "วัยรุ่น",
-  grown: "วัยหนุ่มสาว",
-  adult: "โตเต็มวัย",
-};
-
 function baht(n: number): string {
   return n.toLocaleString("th-TH", { maximumFractionDigits: 0 });
 }
@@ -188,9 +175,8 @@ export function TvScreen({ onLogoClick }: { onLogoClick?: () => void }) {
       </main>
 
       <footer className="tv__bottom">
-        {/* ไม่โชว์แต้ม/เป้า/หลอดโต — ให้ทีมลุ้นเองว่าน้องจะโตตอนไหน (กติกาเจ้านาย) */}
+        {/* ไม่โชว์แต้ม/เป้า/หลอดโต/ป้ายวัย — ให้ทีมลุ้นเองว่าน้องจะโตตอนไหน (กติกาเจ้านาย 2026-07-13) */}
         <div className="tv__ticker">
-          <span className="tv__stage-label">{STAGE_LABEL[stage]}</span>
           <span className="tv__today">วันนี้ {baht(todayTotal)} บาท</span>
           {recent.map((e) => (
             <span key={e.id} className="tv__tick">
