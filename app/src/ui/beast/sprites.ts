@@ -72,6 +72,7 @@ const AVAILABLE: Record<BeastTier, StagePoses> = {
     egg: { idle: "egg-idle", happy: "egg-happy", sleep: "egg-sleep" },
     cracking: { idle: "cracking-idle", happy: "cracking-happy", sleep: "cracking-sleep" },
     peeking: fullStage("peeking"),
+    newborn: fullStage("newborn"),
   },
 };
 
