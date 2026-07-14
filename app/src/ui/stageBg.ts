@@ -26,7 +26,7 @@ export const STAGE_SCENE: Record<Stage, BgScene> = {
 export const BG_AVAILABLE: Record<BeastTier, ReadonlySet<BgScene>> = {
   easy: new Set(["egg", "nursery", "child", "valley", "adult"]),
   medium: new Set(["egg", "nursery", "child", "valley", "adult"]),
-  hard: new Set([]),
+  hard: new Set(["egg", "nursery", "child", "valley", "adult"]),
 };
 
 /** path ฉากหลัง (ตัดสินจากไฟล์ที่มีจริง) — ยังไม่มีของสายพันธุ์นั้นใช้ฉากกลางชุดเดิม */
