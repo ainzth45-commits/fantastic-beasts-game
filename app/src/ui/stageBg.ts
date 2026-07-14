@@ -24,7 +24,7 @@ export const STAGE_SCENE: Record<Stage, BgScene> = {
  * แพทเทิร์นเดียวกับ AVAILABLE ของ sprite (เทส map-to-disk คุมไม่ให้พิมพ์ชื่อมั่ว)
  */
 export const BG_AVAILABLE: Record<BeastTier, ReadonlySet<BgScene>> = {
-  easy: new Set([]),
+  easy: new Set(["egg", "nursery", "child", "valley", "adult"]),
   medium: new Set([]),
   hard: new Set([]),
 };
