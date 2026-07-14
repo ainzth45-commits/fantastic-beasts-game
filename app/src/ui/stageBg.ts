@@ -25,7 +25,7 @@ export const STAGE_SCENE: Record<Stage, BgScene> = {
  */
 export const BG_AVAILABLE: Record<BeastTier, ReadonlySet<BgScene>> = {
   easy: new Set(["egg", "nursery", "child", "valley", "adult"]),
-  medium: new Set([]),
+  medium: new Set(["egg", "nursery", "child", "valley", "adult"]),
   hard: new Set([]),
 };
 
